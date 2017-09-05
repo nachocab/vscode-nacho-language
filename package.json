@@ -1,6 +1,6 @@
 {
-  "name": "foo",
-  "displayName": "foo",
+  "name": "nacho",
+  "displayName": "Nacho",
   "description": "",
   "version": "0.0.1",
   "publisher": "nachocab",
@@ -13,29 +13,43 @@
   "contributes": {
     "languages": [
       {
-        "id": "foo",
+        "id": "nacho",
         "aliases": [
-          "foo",
-          "foo"
+          "nacho",
+          "nacho"
         ],
         "extensions": [
-          ".foo"
+          ".txt"
         ],
         "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
       {
-        "language": "foo",
-        "scopeName": "source.foo",
-        "path": "./syntaxes/foo.tmLanguage.json"
+        "language": "nacho",
+        "scopeName": "source.nacho",
+        "path": "./syntaxes/nacho.tmLanguage"
       }
     ]
   },
+  "activationEvents": [
+    "onLanguage:nacho"
+  ],
+  "main": "./out/src/extension",
   "dependencies": {
     "vscode": "^1.1.5"
   },
   "scripts": {
-    "postinstall": "node ./node_modules/vscode/bin/install"
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "vscode:prepublish": "tsc -p ./",
+    "compile": "tsc -watch -p ./",
+    "test": "node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "typescript": "^2.0.3",
+    "vscode": "^1.1.5",
+    "mocha": "^2.3.3",
+    "@types/node": "^6.0.40",
+    "@types/mocha": "^2.2.32"
   }
 }
