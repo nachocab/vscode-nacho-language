@@ -152,7 +152,8 @@
                 </dict>
             </array>
         </dict>
-        <dict>
+        <!-- remove single quote -->
+        <!-- <dict>
             <key>begin</key>
             <string>'</string>
             <key>beginCaptures</key>
@@ -184,7 +185,7 @@
                     <string>constant.character.escape.nacho</string>
                 </dict>
             </array>
-        </dict>
+        </dict> -->
         <dict>
             <key>captures</key>
             <dict>
