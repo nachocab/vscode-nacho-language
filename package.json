@@ -1,0 +1,41 @@
+{
+  "name": "foo",
+  "displayName": "foo",
+  "description": "",
+  "version": "0.0.1",
+  "publisher": "nachocab",
+  "engines": {
+    "vscode": "^1.15.0"
+  },
+  "categories": [
+    "Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "foo",
+        "aliases": [
+          "foo",
+          "foo"
+        ],
+        "extensions": [
+          ".foo"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "foo",
+        "scopeName": "source.foo",
+        "path": "./syntaxes/foo.tmLanguage.json"
+      }
+    ]
+  },
+  "dependencies": {
+    "vscode": "^1.1.5"
+  },
+  "scripts": {
+    "postinstall": "node ./node_modules/vscode/bin/install"
+  }
+}
