@@ -54,9 +54,15 @@
                 </dict>
             </dict>
             <key>match</key>
-            <string>(#).*$\n?</string>
+            <string>(#) .*$\n?</string>
             <key>name</key>
             <string>comment.line.number-sign.nacho</string>
+        </dict>
+        <dict>
+            <key>match</key>
+            <string>^@.*$\n?</string>
+            <key>name</key>
+            <string>keyword.nacho</string>
         </dict>
         <dict>
             <key>match</key>
