@@ -22,18 +22,6 @@
       "(",
       ")"
     ],
-    [
-      "«",
-      "»"
-    ],
-    [
-      "¿",
-      "?"
-    ],
-    [
-      "¡",
-      "!"
-    ],
   ],
   // symbols that are auto closed when typing
   "autoClosingPairs": [
@@ -53,14 +41,23 @@
       "\"",
       "\""
     ],
-    [
-      "`",
-      "`"
-    ],
+    // doesn't work
+    // [
+    //   "`",
+    //   "`"
+    // ],
     [
       "«",
       "»"
-    ]
+    ],
+    [
+      "¿",
+      "?"
+    ],
+    [
+      "¡",
+      "!"
+    ],
   ],
   // symbols that that can be used to surround a selection
   "surroundingPairs": [
