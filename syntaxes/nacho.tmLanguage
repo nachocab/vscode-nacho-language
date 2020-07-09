@@ -46,11 +46,17 @@
       </dict>
       <dict>
         <key>match</key>
-        <string>^ *#{4,} .*$\n?</string>
+        <string>^ *#{4} .*$\n?</string>
         <key>name</key>
         <string>storage.class.nacho</string>
       </dict>
-      <!-- if you want to style h5, be sure to remove the , in h4 -->
+      <dict>
+        <key>match</key>
+        <string>^ *#{5,} .*$\n?</string>
+        <key>name</key>
+        <string>entity.name.tag</string>
+      </dict>
+      <!-- if you want to style h6, be sure to remove the , in h5 -->
       <dict>
         <key>match</key>
         <string>^> (.*)$</string>
