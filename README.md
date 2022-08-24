@@ -4,4 +4,4 @@ The Nacho language is a variation of the R markdown language, especially designe
 
 * subheadings (##, ###, ####, etc.) that show up in the symbols quick panel even when they are indented.
 
-* highlights within comments using 4 different syntaxes (Ex: # comment _highlight 1_ _highlight 2_, :highlight 3:, `highlight 4`)
+* highlights within comments using 3 different syntaxes (Ex: `# comment *highlight 1*, :highlight 2:, `highlight 3``)

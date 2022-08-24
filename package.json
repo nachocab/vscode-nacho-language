@@ -8,7 +8,7 @@
     "vscode": "^1.15.0"
   },
   "categories": [
-    "Languages"
+    "Programming Languages"
   ],
   "contributes": {
     "languages": [
@@ -28,7 +28,7 @@
       {
         "language": "nacho",
         "scopeName": "source.nacho",
-        "path": "./syntaxes/nacho.tmLanguage"
+        "path": "./syntaxes/nacho.tmLanguage.json"
       }
     ]
   },
