@@ -22,15 +22,15 @@
     },
     {
       "match": "^ *#{3} .*$\\n?",
-      "name": "string.quoted.nacho"
+      "name": "entity.name.tag.nacho"
     },
     {
       "match": "^ *#{4} .*$\\n?",
-      "name": "entity.name.type"
+      "name": "constant.nacho"
     },
     {
       "match": "^ *#{5} .*$\\n?",
-      "name": "entity.name.tag"
+      "name": "string.quoted.nacho"
     },
     {
       "match": "^ *#{6,} .*$\\n?",
@@ -41,7 +41,39 @@
       "name": "storage.class.nacho"
     },
     {
-      "begin": "(#|//) .*",
+      "begin": "(#) .*",
+      "name": "comment.line.number-sign.nacho",
+      "captures": {
+        "0": {
+          "patterns": [
+            {
+              "name": "punctuation.nacho",
+              "match": "\\*(?! )([^*]+)\\*|\\:(?! )([^:]+)\\:|\\`(?! )([^`]+)\\`|\\\"(?! )([^\"]+)\\\"|\\'(?! )([^']+)\\'",
+              "captures": {
+                "1": {
+                  "name": "constant.nacho"
+                },
+                "2": {
+                  "name": "constant.nacho"
+                },
+                "3": {
+                  "name": "constant.nacho"
+                },
+                "4": {
+                  "name": "constant.nacho"
+                },
+                "5": {
+                  "name": "constant.nacho"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "end": "$\\n?"
+    },
+    {
+      "begin": "(//) .*",
       "name": "comment.line.number-sign.nacho",
       "captures": {
         "0": {
@@ -106,6 +138,27 @@
         }
       },
       "end": "\"",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.nacho"
+        }
+      },
+      "name": "string.quoted.double.nacho",
+      "patterns": [
+        {
+          "match": "\\\\.",
+          "name": "constant.character.escape.nacho"
+        }
+      ]
+    },
+    {
+      "begin": "“",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.nacho"
+        }
+      },
+      "end": "”",
       "endCaptures": {
         "0": {
           "name": "punctuation.definition.string.end.nacho"

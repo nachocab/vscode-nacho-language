@@ -15,28 +15,29 @@ patterns:
 
   # headings
   - match: ^ *#{2} .*$\n? # h2
-    name: entity.name.function.nacho
+    name: entity.name.function.nacho # blue
   - match: ^ *#{3} .*$\n? # h3
-    name: string.quoted.nacho
+    name: entity.name.tag.nacho # red
   - match: ^ *#{4} .*$\n? # h4
-    name: entity.name.type
+    name: constant.nacho # orange
   - match: ^ *#{5} .*$\n? # h5
-    name: entity.name.tag
+    name: string.quoted.nacho # green
   - match: ^ *#{6,} .*$\n? # h6 - if you want to style h7, be sure to remove the ,
-    name: storage.class.nacho
+    name: storage.class.nacho # pink
 
   # blockquotes
   - match: ^\s*\>(.*)$
     name: storage.class.nacho
 
-  # anywhere we have a comment
-  - begin: (#|//) .*
+  # anywhere we have a # comment
+  - begin: (#) .*
     name: comment.line.number-sign.nacho
     captures:
       '0':
         patterns:
           - name: punctuation.nacho
-            match: \*(?! )([^*]+)\*|\:(?! )([^:]+)\:|\`(?! )([^`]+)\` # highlight the stuff inside a pair of * : ` when inside a comment
+            # highlight the stuff inside a pair of * : ` " '
+            match: \*(?! )([^*]+)\*|\:(?! )([^:]+)\:|\`(?! )([^`]+)\`|\"(?! )([^"]+)\"|\'(?! )([^']+)\' # add more captures if you add new symbols
             captures:
               '1':
                 name: constant.nacho
@@ -44,7 +45,31 @@ patterns:
                 name: constant.nacho
               '3':
                 name: constant.nacho
-              # add more captures if you add new symbols
+              '4':
+                name: constant.nacho
+              '5':
+                name: constant.nacho
+      # '1':
+      #   name: punctuation.definition.comment.nacho
+    end: $\n? # end the comment on newlines
+
+  # anywhere we have a // comment
+  - begin: (//) .*
+    name: comment.line.number-sign.nacho
+    captures:
+      '0':
+        patterns:
+          - name: punctuation.nacho
+            # highlight the stuff inside a pair of * : ` " '
+            match: \*(?! )([^*]+)\*|\:(?! )([^:]+)\:|\`(?! )([^`]+)\` # add more captures if you add new symbols
+            captures:
+              '1':
+                name: constant.nacho
+              '2':
+                name: constant.nacho
+              '3':
+                name: constant.nacho
+
       # '1':
       #   name: punctuation.definition.comment.nacho
     end: $\n? # end the comment on newlines
@@ -84,6 +109,22 @@ patterns:
       '0':
         name: punctuation.definition.string.begin.nacho
     end: '"'
+    endCaptures:
+      '0':
+        name: punctuation.definition.string.end.nacho
+    name: string.quoted.double.nacho
+    patterns:
+      - match: \\.
+        name: constant.character.escape.nacho
+
+  # plain single string (we can't do it because it gets confused with an apostrophe)
+
+  # fancy double string
+  - begin: “
+    beginCaptures:
+      '0':
+        name: punctuation.definition.string.begin.nacho
+    end: ”
     endCaptures:
       '0':
         name: punctuation.definition.string.end.nacho

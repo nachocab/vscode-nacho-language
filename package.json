@@ -2,7 +2,7 @@
   "name": "nacho",
   "displayName": "Nacho",
   "description": "Variation of the R markdown language, which allows you to have indented subheadings and highlights within comments",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "nachocab",
   "engines": {
     "vscode": "^1.15.0"
