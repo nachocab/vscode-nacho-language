@@ -36,8 +36,8 @@ patterns:
       '0':
         patterns:
           - name: punctuation.nacho
-            # highlight the stuff inside a pair of * : ` " '
-            match: \*(?! )([^*]+)\*|\:(?! )([^:]+)\:|\`(?! )([^`]+)\`|\"(?! )([^"]+)\"|\'(?! )([^']+)\' # add more captures if you add new symbols
+            # highlight the stuff inside a pair of * : ` "
+            match: \*(?! )([^*]+)\*|\:(?! )([^:]+)\:|\`(?! )([^`]+)\`|\"(?! )([^"]+)\" # add more captures if you add new symbols
             captures:
               '1':
                 name: constant.nacho
@@ -46,8 +46,6 @@ patterns:
               '3':
                 name: constant.nacho
               '4':
-                name: constant.nacho
-              '5':
                 name: constant.nacho
       # '1':
       #   name: punctuation.definition.comment.nacho
@@ -60,7 +58,7 @@ patterns:
       '0':
         patterns:
           - name: punctuation.nacho
-            # highlight the stuff inside a pair of * : ` " '
+            # highlight the stuff inside a pair of * : `
             match: \*(?! )([^*]+)\*|\:(?! )([^:]+)\:|\`(?! )([^`]+)\` # add more captures if you add new symbols
             captures:
               '1':
