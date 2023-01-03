@@ -43,11 +43,20 @@
     "compile": "tsc -watch -p ./",
     "test": "node ./node_modules/vscode/bin/test"
   },
+  "repository": "git@github.com:nachocab/vscode-nacho-language.git",
   "devDependencies": {
+<<<<<<< HEAD
     "vscode": "^1.1.5",
     "@types/mocha": "^2.2.32",
     "@types/node": "^6.0.40",
     "mocha": "^10.1.0",
     "typescript": "^2.0.3"
+=======
+    "vscode": "^1.1.36",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^13.9.3",
+    "mocha": "^7.1.1",
+    "typescript": "^3.8.3"
+>>>>>>> b02be57 (Fix package.json 2)
   }
 }
