@@ -5,7 +5,7 @@
   "version": "0.8.0",
   "publisher": "nachocab",
   "engines": {
-    "vscode": "^1.15.0"
+    "vscode": "^1.74.0"
   },
   "categories": [
     "Programming Languages"
@@ -48,6 +48,8 @@
     "@types/node": "^18.11.18",
     "mocha": "^10.2.0",
     "typescript": "^4.9.4",
-    "vscode": "^1.1.34"
-  }
+    "@types/vscode": "^1.74.0",
+    "vscode-test": "^1.6.1"
+  },
+  "dependencies": {}
 }
