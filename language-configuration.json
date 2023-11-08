@@ -24,7 +24,7 @@
   ],
   // symbols that that can be used to surround a selection
   "surroundingPairs": [
-    ["{", "}"],
+    // ["{", "}"],
     ["[", "]"],
     ["(", ")"],
     ["\"", "\""],
@@ -38,5 +38,8 @@
     // [":", ":"] // not worth it
     // ["`", "`"] // doesn't work
     // ["~", "~"] // doesn't work
-  ]
+  ],
+  "folding": {
+    "offSide": true
+  }
 }
