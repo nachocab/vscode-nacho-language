@@ -19,7 +19,8 @@ export interface Node {
   name: string;
   level: number;
   startLine: number;
-  endCharacter: number;
+  endLine?: number;
+  endCharacter?: number;
   parent?: number;
   children?: Node[];
 }
@@ -54,7 +55,7 @@ function getNodes(document: vscode.TextDocument) {
         name,
         level,
         startLine: line.range.start.line,
-        endCharacter: line.range.end.character,
+        // endCharacter: line.range.end.character,
       });
     }
   }
@@ -62,11 +63,31 @@ function getNodes(document: vscode.TextDocument) {
 }
 
 export function getTree(list: Node[]) {
-  const roots: Node[] = [list[0]];
-  for (let i = 1, n = list.length; i < n; i++) {
-    const n = list[i];
-    n.parent = list.slice(0, i).findLastIndex((d: Node) => d.level < n.level);
-    n.children = [];
+  for (let i = 0, n = list.length; i < n; i++) {
+    const node = list[i];
+    let j = i - 1;
+    while (j >= 0 && node.level <= list[j].level) {
+      j -= 1;
+    }
+    if (j >= 0) {
+      node.parent = j;
+    }
+    node.children = [];
+  }
+
+  const roots: Node[] = [];
+  for (let i = 0, n = list.length; i < n; i++) {
+    const node = list[i];
+    if (typeof node.parent === "undefined") {
+      // let prevRoot = roots[roots.length - 1]
+      // while (prevRoot && prevRoot?.children?.length)
+      // while (let prevChildren = roots[roots.length - 1]
+      roots.push(node);
+    } else {
+      list[node.parent].children?.push(node);
+      // list[node.parent].endLine = node.startLine;
+      // list[node.parent].endCharacter = node.endCharacter;
+    }
   }
   return roots;
 }
