@@ -5,8 +5,9 @@ import { glob } from "glob";
 export async function run(): Promise<void> {
   // Create the mocha test
   const mocha = new Mocha({
-    ui: "tdd",
+    ui: "bdd",
     color: true,
+    // reporterOptions: "maxDiffSize=0",
   });
 
   const testsRoot = path.resolve(__dirname, "..");

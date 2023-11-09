@@ -15,11 +15,13 @@ export function activate(context: vscode.ExtensionContext) {
   );
 }
 
-interface Node {
+export interface Node {
   name: string;
   level: number;
   startLine: number;
   endCharacter: number;
+  parent?: number;
+  children?: Node[];
 }
 
 export class NachoDocumentSymbolProvider
@@ -53,15 +55,20 @@ function getNodes(document: vscode.TextDocument) {
         level,
         startLine: line.range.start.line,
         endCharacter: line.range.end.character,
-        // parent: nodes.findLastIndex((n: Node) => n.level > level),
       });
     }
   }
   return nodes;
 }
 
-export function getTree(content: string) {
-  return {};
+export function getTree(list: Node[]) {
+  const roots: Node[] = [list[0]];
+  for (let i = 1, n = list.length; i < n; i++) {
+    const n = list[i];
+    n.parent = list.slice(0, i).findLastIndex((d: Node) => d.level < n.level);
+    n.children = [];
+  }
+  return roots;
 }
 
 export function getSymbols(nodes: Node[]) {

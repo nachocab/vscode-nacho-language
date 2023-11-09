@@ -3,7 +3,9 @@ import * as assert from "assert";
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
 import * as vscode from "vscode";
-import { getSymbols, getTree } from "../../extension";
+import { getSymbols, getTree, Node } from "../../extension";
+import { it, test } from "mocha";
+import { getAllJSDocTagsOfKind } from "typescript";
 
 // import * as JsonSchema from '../jsonSchema';
 
@@ -14,20 +16,55 @@ import { getSymbols, getTree } from "../../extension";
 // } from "../jsonLanguageService";
 // import { colorFrom256RGB } from '../utils/colors';
 
-suite("Nacho Document Symbols", () => {
+describe("Nacho Document Symbols", () => {
   vscode.window.showInformationMessage("Start all tests.");
 
-  test("generate tree", function () {
-    const content = `## Hola\n`;
-    const expected = {
-      name: "Hola",
-      level: 2,
-      firstLine: 0,
-      lastCharacter: 6,
-      children: [],
-    };
+  it("getTree", function () {
+    const content: Node[] = [
+      {
+        name: "h2-1",
+        level: 2,
+        startLine: 0,
+        endCharacter: 4 + 2,
+      },
+      {
+        name: "h3-1",
+        level: 3,
+        startLine: 0,
+        endCharacter: 4 + 3,
+      },
+    ];
+    const expected: Node[] = [
+      {
+        name: "h2-1",
+        level: 2,
+        startLine: 0,
+        endCharacter: 4 + 2,
+        children: [
+          {
+            name: "h3-1",
+            level: 3,
+            startLine: 0,
+            endCharacter: 4 + 3,
+          },
+        ],
+      },
+    ];
     const tree = getTree(content);
     assert.strictEqual(tree, expected);
+  });
+
+  it("getSymbols", () => {
+    // ## h2-1
+    //   ### h3-1
+    //     #### h4-1
+    //   ### h3-2
+    //     ##### h5-1
+    // # just a comment
+    // ## h2-2
+    //   ##### h5-2
+    //     ### h3-3
+    // # another comment
   });
 
   // const schemaRequestService = function (uri: string): Promise<string> {
