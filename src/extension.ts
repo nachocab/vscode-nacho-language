@@ -5,7 +5,7 @@ import * as vscode from "vscode";
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.languages.registerDocumentSymbolProvider(
-      { language: "nacho" },
+      { language: "nacho", scheme: "file" },
       new NachoDocumentSymbolProvider()
     )
   );
@@ -16,31 +16,34 @@ class NachoDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
     document: vscode.TextDocument,
     token: vscode.CancellationToken
   ): Promise<vscode.DocumentSymbol[]> {
-    return new Promise((resolve, reject) => {
-      let symbols: vscode.DocumentSymbol[] = [];
+    const symbols: vscode.DocumentSymbol[] = [];
+    for (let i = 0; i < document.lineCount; i++) {
+      const line = document.lineAt(i);
+      let match;
+      if ((match = line.text.match("^\\s*(#{2,})"))) {
+        const level = match[1]?.length;
+        const name = line.text.replace(/^\s*#+ */, "") || `H${level}`;
 
-      for (let i = 0; i < document.lineCount; i++) {
-        const line = document.lineAt(i);
-        if (line.text.match("^ *#{2,}")) {
-          const name = line.text
-            .replace(/#+ /, "")
-            .replace(/^( *)(.+)/g, function (match, first, rest) {
-              return `${" ".repeat(first.length)}${rest}`;
-            });
-
-          symbols.push(
-            new vscode.DocumentSymbol(
-              name,
-              "Heading",
-              vscode.SymbolKind.Field,
-              line.range,
-              line.range
-            )
-          );
-        }
+        const symbol = new vscode.DocumentSymbol(
+          name,
+          "",
+          vscode.SymbolKind.Field,
+          line.range,
+          line.range
+        );
+        // symbol.children.push(
+        //   new vscode.DocumentSymbol(
+        //     name,
+        //     "test",
+        //     vscode.SymbolKind.Field,
+        //     line.range,
+        //     line.range
+        //   )
+        // );
+        symbols.push(symbol);
       }
+    }
 
-      resolve(symbols);
-    });
+    return new Promise((resolve, reject) => resolve(symbols));
   }
 }
