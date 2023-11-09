@@ -20,7 +20,6 @@ interface Node {
   level: number;
   startLine: number;
   endCharacter: number;
-  parent: number;
 }
 
 export class NachoDocumentSymbolProvider
@@ -30,23 +29,7 @@ export class NachoDocumentSymbolProvider
     document: vscode.TextDocument,
     token: vscode.CancellationToken
   ): Promise<vscode.DocumentSymbol[]> {
-    // const nodes: Node[] = [];
-    // for (let i = 0; i < document.lineCount; i++) {
-    //   const line = document.lineAt(i);
-    //   let match;
-    //   if ((match = line.text.match("^\\s*(#{2,})\\s*(.+)?"))) {
-    //     const level = match[1]?.length;
-    //     const name = match[2] || `H${level}`;
-
-    //     nodes.push({
-    //       name,
-    //       level,
-    //       firstLine: line.range.start.line,
-    //       lastCharacter: line.range.end.character,
-    //       parent: nodes.findLastIndex((n: Node) => n.level > level),
-    //     });
-    //   }
-    // }
+    const nodes = getNodes(document);
 
     const symbols: vscode.DocumentSymbol[] = [];
     // const symbols: vscode.DocumentSymbol[] = getSymbols(nodes);
@@ -56,28 +39,49 @@ export class NachoDocumentSymbolProvider
   }
 }
 
+function getNodes(document: vscode.TextDocument) {
+  const nodes: Node[] = [];
+  for (let i = 0; i < document.lineCount; i++) {
+    const line = document.lineAt(i);
+    let match: string[] | null;
+    if ((match = line.text.match("^\\s*(#{2,})\\s*(.+)?"))) {
+      const level = match[1]?.length;
+      const name = match[2] || `H${level}`;
+
+      nodes.push({
+        name,
+        level,
+        startLine: line.range.start.line,
+        endCharacter: line.range.end.character,
+        // parent: nodes.findLastIndex((n: Node) => n.level > level),
+      });
+    }
+  }
+  return nodes;
+}
+
 export function getTree(content: string) {
   return {};
 }
 
 export function getSymbols(nodes: Node[]) {
-  return nodes.map((node) => {
-    const range = new vscode.Range(
-      node.startLine,
-      0,
-      0,
-      // nodes[node.lastChild]?.startLine,
-      // node.endCharacter
-      0
-    );
-    return new vscode.DocumentSymbol(
-      node.name,
-      nodes[node.parent].name,
-      vscode.SymbolKind.Field,
-      range,
-      range
-    );
-  });
+  // return nodes.map((node) => {
+  //   const range = new vscode.Range(
+  //     node.startLine,
+  //     0,
+  //     0,
+  //     // nodes[node.lastChild]?.startLine,
+  //     // node.endCharacter
+  //     0
+  //   );
+  //   return new vscode.DocumentSymbol(
+  //     node.name,
+  //     nodes[node.parent].name,
+  //     vscode.SymbolKind.Field,
+  //     range,
+  //     range
+  //   );
+  // });
 }
 
 // This method is called when your extension is deactivated

@@ -1,6 +1,0 @@
-{
-  "ui": "tdd",
-  "color": true,
-  "spec": "./out/src/test",
-  "recursive": true
-}
