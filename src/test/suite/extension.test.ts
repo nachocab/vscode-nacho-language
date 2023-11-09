@@ -1,5 +1,10 @@
 import * as assert from "assert";
-import * as NachoSymbolProvider from "../extension";
+
+// You can import and use all API from the 'vscode' module
+// as well as import your extension to test it
+import * as vscode from "vscode";
+import { getSymbols, getTree } from "../../extension";
+
 // import * as JsonSchema from '../jsonSchema';
 
 // import {
@@ -9,10 +14,25 @@ import * as NachoSymbolProvider from "../extension";
 // } from "../jsonLanguageService";
 // import { colorFrom256RGB } from '../utils/colors';
 
-suite("JSON Document Symbols", () => {
-  const schemaRequestService = function (uri: string): Promise<string> {
-    return Promise.reject<string>("Resource not found");
-  };
+suite("Nacho Document Symbols", () => {
+  vscode.window.showInformationMessage("Start all tests.");
+
+  test("generate tree", function () {
+    const content = `## Hola\n`;
+    const expected = {
+      name: "Hola",
+      level: 2,
+      firstLine: 0,
+      lastCharacter: 6,
+      children: [],
+    };
+    const tree = getTree(content);
+    assert.strictEqual(tree, expected);
+  });
+
+  // const schemaRequestService = function (uri: string): Promise<string> {
+  //   return Promise.reject<string>("Resource not found");
+  // };
 
   // function getFlatOutline(value: string, context?: { resultLimit?: number }): SymbolInformation[] {
   // 	const uri = 'test://test.json';
@@ -97,19 +117,6 @@ suite("JSON Document Symbols", () => {
   // 		assert.equal(actual[i].kind, expected[i].kind, message);
   // 	}
   // }
-
-  test("Outline - Base types", function () {
-    const content = '{ "key1": 1, "key2": "foo", "key3" : true }';
-
-    assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-    // const expected = [
-    // 	{ label: 'key1', kind: SymbolKind.Number },
-    // 	{ label: 'key2', kind: SymbolKind.String },
-    // 	{ label: 'key3', kind: SymbolKind.Boolean },
-    // ];
-
-    // assertOutline(content, expected);
-  });
 
   // test('Outline - Arrays', function () {
   // 	const content = '{ "key1": 1, "key2": [ 1, 2, 3 ], "key3" : [ { "k1": 1 }, {"k2": 2 } ] }';
