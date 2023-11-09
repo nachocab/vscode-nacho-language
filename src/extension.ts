@@ -19,7 +19,9 @@ interface Node {
   parent: number;
 }
 
-class NachoDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
+export class NachoDocumentSymbolProvider
+  implements vscode.DocumentSymbolProvider
+{
   public provideDocumentSymbols(
     document: vscode.TextDocument,
     token: vscode.CancellationToken
@@ -55,8 +57,10 @@ function getSymbols(nodes: Node[]) {
     const range = new vscode.Range(
       node.startLine,
       0,
-      nodes[node.lastChild]?.startLine,
-      node.endCharacter
+      0,
+      // nodes[node.lastChild]?.startLine,
+      // node.endCharacter
+      0
     );
     return new vscode.DocumentSymbol(
       node.name,

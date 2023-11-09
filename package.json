@@ -35,17 +35,19 @@
   "activationEvents": [],
   "main": "./out/src/extension",
   "scripts": {
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "vscode:prepublish": "tsc -p ./",
-    "compile": "tsc -watch -p ./",
-    "test": "node ./node_modules/vscode/bin/test"
+    "pretest": "npm run compile",
+    "compile": "tsc -p ./",
+    "compile:watch": "tsc -watch -p ./",
+    "test": "mocha",
+    "test:watch": "mocha --watch"
   },
   "repository": "git@github.com:nachocab/vscode-nacho-language.git",
   "devDependencies": {
-    "@types/node": "^18.11.18",
-    "@types/vscode": "^1.74.0",
-    "typescript": "^4.9.4",
-    "vitest": "^0.34.6",
-    "vscode-test": "^1.6.1"
+    "@types/vscode": "^1.84.1",
+    "@types/mocha": "^10.0.4",
+    "@types/node": "^20.9.0",
+    "mocha": "^10.2.0",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.2.2"
   }
 }
