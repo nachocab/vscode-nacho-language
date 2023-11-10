@@ -24,13 +24,13 @@ describe("Nacho Document Symbols", () => {
       {
         name: "h2-1",
         level: 2,
-        startLine: 0,
+        line: 0,
         // endCharacter: 4 + 2,
       },
       {
         name: "h3-1",
         level: 3,
-        startLine: 1,
+        line: 1,
         // endCharacter: 4 + 3,
       },
     ];
@@ -41,14 +41,14 @@ describe("Nacho Document Symbols", () => {
       {
         name: "h2-1",
         level: 2,
-        startLine: 0,
+        line: 0,
         // endLine: 1,
         // endCharacter: 4 + 3,
         children: [
           {
             name: "h3-1",
             level: 3,
-            startLine: 1,
+            line: 1,
             // endLine: 1,
             // endCharacter: 4 + 3,
             parent: 0,
@@ -66,19 +66,19 @@ describe("Nacho Document Symbols", () => {
       {
         name: "h2-1",
         level: 2,
-        startLine: 0,
+        line: 0,
         // endCharacter: 4 + 2,
       },
       {
         name: "h3-1",
         level: 3,
-        startLine: 1,
+        line: 1,
         // endCharacter: 4 + 3,
       },
       {
         name: "h4-1",
         level: 4,
-        startLine: 2,
+        line: 2,
         // endCharacter: 4 + 4,
       },
     ];
@@ -90,14 +90,14 @@ describe("Nacho Document Symbols", () => {
       {
         name: "h2-1",
         level: 2,
-        startLine: 0,
+        line: 0,
         // endLine: 2,
         // endCharacter: 4 + 4,
         children: [
           {
             name: "h3-1",
             level: 3,
-            startLine: 1,
+            line: 1,
             // endLine: 2,
             // endCharacter: 4 + 4,
             parent: 0,
@@ -106,7 +106,7 @@ describe("Nacho Document Symbols", () => {
                 name: "h4-1",
                 level: 4,
                 parent: 1,
-                startLine: 2,
+                line: 2,
                 // endLine: 2,
                 // endCharacter: 4 + 4,
                 children: [],
@@ -125,50 +125,50 @@ describe("Nacho Document Symbols", () => {
       {
         name: "h2-1",
         level: 2,
-        startLine: 0,
+        line: 0,
         // endCharacter: 4 + 2,
       },
       {
         name: "h3-1",
         level: 3,
-        startLine: 1,
+        line: 1,
         // endCharacter: 4 + 3,
       },
       {
         name: "h4-1",
         level: 4,
-        startLine: 2,
+        line: 2,
         // endCharacter: 4 + 4,
       },
       {
         name: "h3-2",
         level: 3,
-        startLine: 0,
+        line: 0,
         // endCharacter: 4 + 3,
       },
       {
         name: "h5-1",
         level: 5,
-        startLine: 4,
+        line: 4,
         // endCharacter: 4 + 5,
       },
       // line 5 has content
       {
         name: "h2-2",
         level: 2,
-        startLine: 6,
+        line: 6,
         // endCharacter: 4 + 2,
       },
       {
         name: "h5-2",
         level: 5,
-        startLine: 7,
+        line: 7,
         // endCharacter: 4 + 5,
       },
       {
         name: "h3-3",
         level: 3,
-        startLine: 8,
+        line: 8,
         // endCharacter: 4 + 3,
       },
       // line 9 has content
@@ -187,79 +187,102 @@ describe("Nacho Document Symbols", () => {
 
     const expected: Node[] = [
       {
+        level: 2,
+        name: "h2-1",
+        line: 0,
         children: [
           {
-            children: [
-              {
-                children: [],
-                level: 4,
-                name: "h4-1",
-                parent: 1,
-                startLine: 2,
-              },
-            ],
             level: 3,
             name: "h3-1",
             parent: 0,
-            startLine: 1,
-          },
-          {
+            line: 1,
             children: [
               {
+                level: 4,
+                name: "h4-1",
+                parent: 1,
+                line: 2,
                 children: [],
-                level: 5,
-                name: "h5-1",
-                parent: 3,
-                startLine: 4,
               },
             ],
+          },
+          {
             level: 3,
             name: "h3-2",
             parent: 0,
-            startLine: 0,
+            line: 0,
+            children: [
+              {
+                level: 5,
+                name: "h5-1",
+                parent: 3,
+                line: 4,
+                children: [],
+              },
+            ],
           },
         ],
-        level: 2,
-        name: "h2-1",
-        startLine: 0,
       },
       {
+        level: 2,
+        name: "h2-2",
+        line: 6,
         children: [
           {
-            children: [],
             level: 5,
             name: "h5-2",
             parent: 5,
-            startLine: 7,
+            line: 7,
+            children: [],
           },
           {
-            children: [],
             level: 3,
             name: "h3-3",
             parent: 5,
-            startLine: 8,
+            line: 8,
+            children: [],
           },
         ],
-        level: 2,
-        name: "h2-2",
-        startLine: 6,
       },
     ];
     const tree = getTree(content);
     assert.deepEqual(tree, expected);
   });
 
-  it("getSymbols", () => {
+  it("getSymbols simple", () => {
+    const tree: Node[] = [
+      {
+        name: "h2-1",
+        level: 2,
+        line: 0,
+        // endLine: 2,
+        // endCharacter: 4 + 4,
+        children: [
+          {
+            name: "h3-1",
+            level: 3,
+            line: 1,
+            // endLine: 2,
+            // endCharacter: 4 + 4,
+            parent: 0,
+            children: [
+              {
+                name: "h4-1",
+                level: 4,
+                parent: 1,
+                line: 2,
+                // endLine: 2,
+                // endCharacter: 4 + 4,
+                children: [],
+              },
+            ],
+          },
+        ],
+      },
+    ];
     // ## h2-1
     //   ### h3-1
     //     #### h4-1
-    //   ### h3-2
-    //     ##### h5-1
-    // # just a comment
-    // ## h2-2
-    //   ##### h5-2
-    //     ### h3-3
-    // # another comment
   });
 
   // const schemaRequestService = function (uri: string): Promise<string> {
