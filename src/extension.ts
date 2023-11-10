@@ -1,11 +1,5 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 
-// Code based on https://stackoverflow.com/a/46054953/355567
-
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.languages.registerDocumentSymbolProvider(
@@ -20,15 +14,6 @@ export interface Node {
   level: number;
   startLine: number;
   endLine: number;
-  length?: number;
-  parent?: number;
-  children?: Node[];
-}
-export interface NodeTest {
-  name: string;
-  level: number;
-  startLine: number;
-  endLine?: number;
   length?: number;
   parent?: number;
   children?: Node[];
@@ -53,8 +38,8 @@ function getNodes(document: vscode.TextDocument) {
   const nodes: Node[] = [];
   for (let i = 0; i < document.lineCount; i++) {
     const line = document.lineAt(i);
-    let match: string[] | null;
-    if ((match = line.text.match("^\\s*(#{2,})\\s*(.+)?"))) {
+    let match = line.text.match("^\\s*(#{2,})\\s*(.+)?");
+    if (match) {
       const level = match[1]?.length;
       const name = match[2] || `H${level}`;
 

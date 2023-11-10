@@ -6,99 +6,58 @@ import * as vscode from "vscode";
 import { getSymbols, getTree, Node, traverse, TestNode } from "../../extension";
 import { it } from "mocha";
 
+function getNode(name: string, line: number) {
+  return {
+    name,
+    // @ts-ignore
+    level: +name.match(/(\d)/)[1],
+    startLine: line,
+    endLine: line,
+  } as Node;
+}
+
 describe("Nacho Document Symbols", () => {
   // vscode.window.showInformationMessage("Start all tests.");
 
   it("getTree 1-level", function () {
-    const content: Node[] = [
-      {
-        name: "h2-1",
-        level: 2,
-        startLine: 0,
-        // endCharacter: 4 + 2,
-      },
-      {
-        name: "h3-1",
-        level: 3,
-        startLine: 1,
-        // endCharacter: 4 + 3,
-      },
-    ];
     // (0) ## h2-1        (1)
     // (1)   ### h3-1     (1)
+    const list = ["h2-1", "h3-1"].map(getNode);
 
     const expected: Node[] = [
       {
-        name: "h2-1",
-        level: 2,
-        startLine: 0,
-        // endLine: 1,
-        // endCharacter: 4 + 3,
+        ...getNode("h2-1", 0),
         children: [
           {
-            name: "h3-1",
-            level: 3,
-            startLine: 1,
-            // endLine: 1,
-            // endCharacter: 4 + 3,
+            ...getNode("h3-1", 1),
             parent: 0,
             children: [],
-          },
+          } as Node,
         ],
       },
     ];
-    const tree = getTree(content);
+    const tree = getTree(list);
     assert.deepEqual(tree, expected);
   });
 
   it("getTree 2-level", function () {
-    const content: Node[] = [
-      {
-        name: "h2-1",
-        level: 2,
-        startLine: 0,
-        // endCharacter: 4 + 2,
-      },
-      {
-        name: "h3-1",
-        level: 3,
-        startLine: 1,
-        // endCharacter: 4 + 3,
-      },
-      {
-        name: "h4-1",
-        level: 4,
-        startLine: 2,
-        // endCharacter: 4 + 4,
-      },
-    ];
     // (0) ## h2-1        (2)
     // (1)   ### h3-1     (2)
     // (2)     #### h4-1  (2)
+    const list = ["h2-1", "h3-1", "h4-1"].map(getNode);
 
     const expected: Node[] = [
       {
-        name: "h2-1",
-        level: 2,
-        startLine: 0,
-        // endLine: 2,
-        // endCharacter: 4 + 4,
+        ...getNode("h2-1", 0),
         children: [
           {
-            name: "h3-1",
-            level: 3,
-            startLine: 1,
-            // endLine: 2,
-            // endCharacter: 4 + 4,
+            ...getNode("h3-1", 1),
             parent: 0,
             children: [
               {
-                name: "h4-1",
-                level: 4,
+                ...getNode("h4-1", 2),
                 parent: 1,
                 startLine: 2,
-                // endLine: 2,
-                // endCharacter: 4 + 4,
                 children: [],
               },
             ],
@@ -106,64 +65,11 @@ describe("Nacho Document Symbols", () => {
         ],
       },
     ];
-    const tree = getTree(content);
+    const tree = getTree(list);
     assert.deepEqual(tree, expected);
   });
 
   it("getTree complex", function () {
-    const content: Node[] = [
-      {
-        name: "h2-1",
-        level: 2,
-        startLine: 0,
-        // endCharacter: 4 + 2,
-      },
-      {
-        name: "h3-1",
-        level: 3,
-        startLine: 1,
-        // endCharacter: 4 + 3,
-      },
-      {
-        name: "h4-1",
-        level: 4,
-        startLine: 2,
-        // endCharacter: 4 + 4,
-      },
-      {
-        name: "h3-2",
-        level: 3,
-        startLine: 0,
-        // endCharacter: 4 + 3,
-      },
-      {
-        name: "h5-1",
-        level: 5,
-        startLine: 4,
-        // endCharacter: 4 + 5,
-      },
-      // line 5 has content
-      {
-        name: "h2-2",
-        level: 2,
-        startLine: 6,
-        // endCharacter: 4 + 2,
-      },
-      {
-        name: "h5-2",
-        level: 5,
-        startLine: 7,
-        // endCharacter: 4 + 5,
-      },
-      {
-        name: "h3-3",
-        level: 3,
-        startLine: 8,
-        // endCharacter: 4 + 3,
-      },
-      // line 9 has content
-    ];
-
     // (0) ## h2-1        (4)
     // (1)   ### h3-1     (2)
     // (2)     #### h4-1  (2)
@@ -174,39 +80,43 @@ describe("Nacho Document Symbols", () => {
     // (7)   ##### h5-2   (8)
     // (8)   ### h3-3     (8)
     // (9) # comment      ( )
+    const list = [
+      "h2-1",
+      "h3-1",
+      "h4-1",
+      "h3-2",
+      "h5-1",
+      null,
+      "h2-2",
+      "h5-2",
+      "h3-3",
+      null,
+    ]
+      .map((name, line) => name && getNode(name, line))
+      .filter(Boolean) as Node[];
 
     const expected: Node[] = [
       {
-        level: 2,
-        name: "h2-1",
-        startLine: 0,
+        ...getNode("h2-1", 0),
         children: [
           {
-            level: 3,
-            name: "h3-1",
+            ...getNode("h3-1", 1),
             parent: 0,
-            startLine: 1,
             children: [
               {
-                level: 4,
-                name: "h4-1",
+                ...getNode("h4-1", 2),
                 parent: 1,
-                startLine: 2,
                 children: [],
               },
             ],
           },
           {
-            level: 3,
-            name: "h3-2",
+            ...getNode("h3-2", 3),
             parent: 0,
-            startLine: 0,
             children: [
               {
-                level: 5,
-                name: "h5-1",
+                ...getNode("h5-1", 4),
                 parent: 3,
-                startLine: 4,
                 children: [],
               },
             ],
@@ -214,32 +124,26 @@ describe("Nacho Document Symbols", () => {
         ],
       },
       {
-        level: 2,
-        name: "h2-2",
-        startLine: 6,
+        ...getNode("h2-2", 6),
         children: [
           {
-            level: 5,
-            name: "h5-2",
+            ...getNode("h5-2", 7),
             parent: 5,
-            startLine: 7,
             children: [],
           },
           {
-            level: 3,
-            name: "h3-3",
+            ...getNode("h3-3", 8),
             parent: 5,
-            startLine: 8,
             children: [],
           },
         ],
       },
     ];
-    const tree = getTree(content);
+    const tree = getTree(list);
     assert.deepEqual(tree, expected);
   });
 
-  it.only("getSymbols simple", () => {
+  it.skip("getSymbols simple", () => {
     const tree: Node[] = [
       {
         name: "h2-1",
