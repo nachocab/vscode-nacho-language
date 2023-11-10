@@ -1,61 +1,60 @@
 import * as assert from "assert";
-
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
-import * as vscode from "vscode";
-import { getSymbols, getTree, Node, traverse, TestNode } from "../../extension";
+import { getSymbol, getRoots, Node, ROOT } from "../../extension";
 import { it } from "mocha";
 
-function getNode(name: string, line: number) {
+import * as vscode from "vscode";
+
+function getAuxNode(name: string, line: number) {
   return {
     name,
     // @ts-ignore
     level: +name.match(/(\d)/)[1],
     startLine: line,
     endLine: line,
+    length: name.length,
+    parent: ROOT,
+    children: [] as Node[],
   } as Node;
 }
 
 describe("Nacho Document Symbols", () => {
-  // vscode.window.showInformationMessage("Start all tests.");
-
-  it("getTree 1-level", function () {
+  it("getRoots 1-level", function () {
     // (0) ## h2-1        (1)
     // (1)   ### h3-1     (1)
-    const list = ["h2-1", "h3-1"].map(getNode);
+    const list = ["h2-1", "h3-1"].map(getAuxNode);
 
     const expected: Node[] = [
       {
-        ...getNode("h2-1", 0),
+        ...getAuxNode("h2-1", 0),
         children: [
           {
-            ...getNode("h3-1", 1),
+            ...getAuxNode("h3-1", 1),
             parent: 0,
             children: [],
           } as Node,
         ],
       },
     ];
-    const tree = getTree(list);
-    assert.deepEqual(tree, expected);
+    const roots = getRoots(list);
+    assert.deepEqual(roots, expected);
   });
 
-  it("getTree 2-level", function () {
+  it("getRoots 2-level", function () {
     // (0) ## h2-1        (2)
     // (1)   ### h3-1     (2)
     // (2)     #### h4-1  (2)
-    const list = ["h2-1", "h3-1", "h4-1"].map(getNode);
+    const list = ["h2-1", "h3-1", "h4-1"].map(getAuxNode);
 
     const expected: Node[] = [
       {
-        ...getNode("h2-1", 0),
+        ...getAuxNode("h2-1", 0),
         children: [
           {
-            ...getNode("h3-1", 1),
+            ...getAuxNode("h3-1", 1),
             parent: 0,
             children: [
               {
-                ...getNode("h4-1", 2),
+                ...getAuxNode("h4-1", 2),
                 parent: 1,
                 startLine: 2,
                 children: [],
@@ -65,11 +64,11 @@ describe("Nacho Document Symbols", () => {
         ],
       },
     ];
-    const tree = getTree(list);
-    assert.deepEqual(tree, expected);
+    const roots = getRoots(list);
+    assert.deepEqual(roots, expected);
   });
 
-  it("getTree complex", function () {
+  it("getRoots complex", function () {
     // (0) ## h2-1        (4)
     // (1)   ### h3-1     (2)
     // (2)     #### h4-1  (2)
@@ -92,30 +91,30 @@ describe("Nacho Document Symbols", () => {
       "h3-3",
       null,
     ]
-      .map((name, line) => name && getNode(name, line))
+      .map((name, line) => name && getAuxNode(name, line))
       .filter(Boolean) as Node[];
 
     const expected: Node[] = [
       {
-        ...getNode("h2-1", 0),
+        ...getAuxNode("h2-1", 0),
         children: [
           {
-            ...getNode("h3-1", 1),
+            ...getAuxNode("h3-1", 1),
             parent: 0,
             children: [
               {
-                ...getNode("h4-1", 2),
+                ...getAuxNode("h4-1", 2),
                 parent: 1,
                 children: [],
               },
             ],
           },
           {
-            ...getNode("h3-2", 3),
+            ...getAuxNode("h3-2", 3),
             parent: 0,
             children: [
               {
-                ...getNode("h5-1", 4),
+                ...getAuxNode("h5-1", 4),
                 parent: 3,
                 children: [],
               },
@@ -124,27 +123,27 @@ describe("Nacho Document Symbols", () => {
         ],
       },
       {
-        ...getNode("h2-2", 6),
+        ...getAuxNode("h2-2", 6),
         children: [
           {
-            ...getNode("h5-2", 7),
+            ...getAuxNode("h5-2", 7),
             parent: 5,
             children: [],
           },
           {
-            ...getNode("h3-3", 8),
+            ...getAuxNode("h3-3", 8),
             parent: 5,
             children: [],
           },
         ],
       },
     ];
-    const tree = getTree(list);
-    assert.deepEqual(tree, expected);
+    const roots = getRoots(list);
+    assert.deepEqual(roots, expected);
   });
 
   it.skip("getSymbols simple", () => {
-    const tree: Node[] = [
+    const roots: Node[] = [
       {
         name: "h2-1",
         level: 2,
@@ -178,11 +177,11 @@ describe("Nacho Document Symbols", () => {
     //   ### h3-1
     //     #### h4-1
 
-    assert.deepEqual(getSymbols(tree), {});
+    assert.deepEqual(getSymbols(roots), {});
   });
 
   // it("traverses", () => {
-  //   const tree = {
+  //   const roots = {
   //     name: "a",
   //     n: 0,
   //     children: [
@@ -190,7 +189,7 @@ describe("Nacho Document Symbols", () => {
   //       { name: "c", n: 2, children: [] },
   //     ],
   //   };
-  //   const res = traverse(tree, []);
+  //   const res = traverse(roots, []);
   //   assert.deepEqual(res, ["b", "c", "a"]);
   //   // assert.deepEqual(res, {
   //   //   name: "a",
