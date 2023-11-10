@@ -5,16 +5,6 @@ import * as assert from "assert";
 import * as vscode from "vscode";
 import { getSymbols, getTree, Node } from "../../extension";
 import { it } from "mocha";
-import { getAllJSDocTagsOfKind } from "typescript";
-
-// import * as JsonSchema from '../jsonSchema';
-
-// import {
-// 	Thenable, getLanguageService,
-// 	ClientCapabilities, DocumentSymbolsContext,
-// 	TextDocument, Color, SymbolInformation, SymbolKind, Range, Position, TextEdit, DocumentSymbol
-// } from "../jsonLanguageService";
-// import { colorFrom256RGB } from '../utils/colors';
 
 describe("Nacho Document Symbols", () => {
   // vscode.window.showInformationMessage("Start all tests.");
