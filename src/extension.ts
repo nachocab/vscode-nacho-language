@@ -19,7 +19,7 @@ export class NachoDocumentSymbolProvider
   ): Promise<vscode.DocumentSymbol[]> {
     const nodes = getNodes(document);
     const roots = getRoots(nodes);
-    const symbols = roots.map(toSymbol);
+    const symbols = roots.map(getSymbol);
 
     return new Promise((resolve, reject) => resolve(symbols));
   }
@@ -53,17 +53,6 @@ function getNodes(document: vscode.TextDocument) {
   return nodes;
 }
 
-function assignParents(nodes: Node[]) {
-  for (let i = 0, n = nodes.length; i < n; i++) {
-    const node = nodes[i];
-    let j = i - 1;
-    while (j >= 0 && node.level <= nodes[j].level) {
-      j -= 1;
-    }
-    j >= 0 && (node.parent = j);
-  }
-}
-
 export function getRoots(nodes: Node[]) {
   assignParents(nodes);
 
@@ -80,10 +69,29 @@ export function getRoots(nodes: Node[]) {
   return roots;
 }
 
-function deepestChild(node: Node): Node {
-  return node.children.length
-    ? deepestChild(node.children.at(-1) as Node)
-    : node;
+function assignParents(nodes: Node[]) {
+  for (let i = 0, n = nodes.length; i < n; i++) {
+    const node = nodes[i];
+    let j = i - 1;
+    while (j >= 0 && node.level <= nodes[j].level) {
+      j -= 1;
+    }
+    j >= 0 && (node.parent = j);
+  }
+}
+
+export function getSymbol(node: Node) {
+  const range = getRange(node);
+  const symbol = new vscode.DocumentSymbol(
+    node.name,
+    "", // VSCode overwrites it with the parent name
+    vscode.SymbolKind.Field,
+    range,
+    range
+  );
+  node.children.length && (symbol.children = node.children.map(getSymbol));
+
+  return symbol;
 }
 
 function getRange(node: Node) {
@@ -99,18 +107,10 @@ function getRange(node: Node) {
   );
 }
 
-function toSymbol(node: Node) {
-  const range = getRange(node);
-  const symbol = new vscode.DocumentSymbol(
-    node.name,
-    "", // VSCode overwrites it with the parent name
-    vscode.SymbolKind.Field,
-    range,
-    range
-  );
-  node.children.length && (symbol.children = node.children.map(toSymbol));
-
-  return symbol;
+function deepestChild(node: Node): Node {
+  return node.children.length
+    ? deepestChild(node.children.at(-1) as Node)
+    : node;
 }
 
 export function activate(context: vscode.ExtensionContext) {

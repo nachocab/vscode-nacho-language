@@ -4,24 +4,11 @@ import { it } from "mocha";
 
 import * as vscode from "vscode";
 
-function getAuxNode(name: string, line: number) {
-  return {
-    name,
-    // @ts-ignore
-    level: +name.match(/(\d)/)[1],
-    startLine: line,
-    endLine: line,
-    length: name.length,
-    parent: ROOT,
-    children: [] as Node[],
-  } as Node;
-}
-
 describe("Nacho Document Symbols", () => {
   it("getRoots 1-level", function () {
     // (0) ## h2-1        (1)
     // (1)   ### h3-1     (1)
-    const list = ["h2-1", "h3-1"].map(getAuxNode);
+    const nodes = ["h2-1", "h3-1"].map(getAuxNode);
 
     const expected: Node[] = [
       {
@@ -35,7 +22,8 @@ describe("Nacho Document Symbols", () => {
         ],
       },
     ];
-    const roots = getRoots(list);
+
+    const roots = getRoots(nodes);
     assert.deepEqual(roots, expected);
   });
 
@@ -43,7 +31,7 @@ describe("Nacho Document Symbols", () => {
     // (0) ## h2-1        (2)
     // (1)   ### h3-1     (2)
     // (2)     #### h4-1  (2)
-    const list = ["h2-1", "h3-1", "h4-1"].map(getAuxNode);
+    const nodes = ["h2-1", "h3-1", "h4-1"].map(getAuxNode);
 
     const expected: Node[] = [
       {
@@ -64,7 +52,8 @@ describe("Nacho Document Symbols", () => {
         ],
       },
     ];
-    const roots = getRoots(list);
+
+    const roots = getRoots(nodes);
     assert.deepEqual(roots, expected);
   });
 
@@ -79,7 +68,7 @@ describe("Nacho Document Symbols", () => {
     // (7)   ##### h5-2   (8)
     // (8)   ### h3-3     (8)
     // (9) # comment      ( )
-    const list = [
+    const nodes = [
       "h2-1",
       "h3-1",
       "h4-1",
@@ -138,66 +127,68 @@ describe("Nacho Document Symbols", () => {
         ],
       },
     ];
-    const roots = getRoots(list);
+
+    const roots = getRoots(nodes);
     assert.deepEqual(roots, expected);
   });
 
-  it.skip("getSymbols simple", () => {
-    const roots: Node[] = [
-      {
-        name: "h2-1",
-        level: 2,
-        startLine: 0,
-        // endLine: 2,
-        // endCharacter: 4 + 4,
-        children: [
-          {
-            name: "h3-1",
-            level: 3,
-            startLine: 1,
-            // endLine: 2,
-            // endCharacter: 4 + 4,
-            parent: 0,
-            children: [
-              {
-                name: "h4-1",
-                level: 4,
-                parent: 1,
-                startLine: 2,
-                // /endLine: 2,
-                // endCharacter: 4 + 4,
-                children: [],
-              },
-            ],
-          },
-        ],
-      },
-    ];
-    // ## h2-1
-    //   ### h3-1
-    //     #### h4-1
+  it("getSymbols simple", () => {
+    // (0) ## h2-1        (2)
+    // (1)   ### h3-1     (2)
+    // (2)     #### h4-1  (2)
+    const nodes = ["h2-1", "h3-1", "h4-1"].map(getAuxNode);
+    const roots = getRoots(nodes);
 
-    assert.deepEqual(getSymbols(roots), {});
+    const expected: vscode.DocumentSymbol = getAuxSymbol(
+      "h2-1",
+      [0, 2, 4],
+      // prettier-ignore
+      [
+        getAuxSymbol("h3-1", [1, 2, 4], [
+          getAuxSymbol("h4-1", [2, 2, 4], [])
+        ])
+      ]
+    );
+
+    const symbol = getSymbol(roots[0]);
+    assert.deepEqual(symbol, expected);
   });
-
-  // it("traverses", () => {
-  //   const roots = {
-  //     name: "a",
-  //     n: 0,
-  //     children: [
-  //       { name: "b", n: 1, children: [] },
-  //       { name: "c", n: 2, children: [] },
-  //     ],
-  //   };
-  //   const res = traverse(roots, []);
-  //   assert.deepEqual(res, ["b", "c", "a"]);
-  //   // assert.deepEqual(res, {
-  //   //   name: "a",
-  //   //   n: 3,
-  //   //   children2: [
-  //   //     { name: "b", n: 1, children2: [] },
-  //   //     { name: "c", n: 2, children2: [] },
-  //   //   ],
-  //   // });
-  // });
 });
+
+function getAuxNode(name: string, line: number) {
+  return {
+    name,
+    // @ts-ignore
+    level: +name.match(/(\d)/)[1],
+    startLine: line,
+    endLine: line,
+    length: name.length,
+    parent: ROOT,
+    children: [] as Node[],
+  } as Node;
+}
+
+type PseudoRange = [number, number, number];
+function getAuxSymbol(
+  name: string,
+  pseudoRange: PseudoRange,
+  children: vscode.DocumentSymbol[]
+) {
+  const range = new vscode.Range(
+    pseudoRange[0],
+    0,
+    pseudoRange[1],
+    pseudoRange[2]
+  );
+
+  const symbol = new vscode.DocumentSymbol(
+    name,
+    "",
+    vscode.SymbolKind.Field,
+    range,
+    range
+  );
+  symbol.children = children;
+
+  return symbol;
+}
