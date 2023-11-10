@@ -18,7 +18,16 @@ export function activate(context: vscode.ExtensionContext) {
 export interface Node {
   name: string;
   level: number;
-  line: number;
+  startLine: number;
+  endLine: number;
+  length?: number;
+  parent?: number;
+  children?: Node[];
+}
+export interface NodeTest {
+  name: string;
+  level: number;
+  startLine: number;
   endLine?: number;
   length?: number;
   parent?: number;
@@ -33,7 +42,8 @@ export class NachoDocumentSymbolProvider
     token: vscode.CancellationToken
   ): Promise<vscode.DocumentSymbol[]> {
     const nodes = getNodes(document);
-    const symbols: vscode.DocumentSymbol[] = getSymbols(nodes);
+    const tree = getTree(nodes);
+    const symbols: vscode.DocumentSymbol[] = getSymbols(tree);
 
     return new Promise((resolve, reject) => resolve(symbols));
   }
@@ -51,9 +61,13 @@ function getNodes(document: vscode.TextDocument) {
       nodes.push({
         name,
         level,
-        line: line.range.start.line,
+        startLine: line.range.start.line,
+        endLine: line.range.end.line,
         length: line.range.end.character,
       });
+    } else {
+      const lastNode = nodes.at(-1);
+      lastNode && (lastNode.endLine = line.range.end.line);
     }
   }
   return nodes;
@@ -89,36 +103,56 @@ export function getTree(list: Node[]) {
   return roots;
 }
 
-function toSymbol(
-  node: Node,
-  parentName: string,
-  endLine: number,
-  endCharacter: number
-) {
-  const range = new vscode.Range(node.line, 0, endLine, endCharacter);
+function deepestChild(node: Node): Node {
+  return node.children?.length
+    ? deepestChild(node.children.at(-1) as Node)
+    : node;
+}
 
-  return new vscode.DocumentSymbol(
+function toSymbol(node: Node) {
+  const startCharacter = 0;
+  const endCharacter = node.length as number;
+  const numChildren = node.children?.length || 0;
+  const endLine = numChildren ? deepestChild(node).endLine : node.endLine;
+  const range = new vscode.Range(
+    node.startLine,
+    startCharacter,
+    endLine,
+    endCharacter
+  );
+
+  const symbol = new vscode.DocumentSymbol(
     node.name,
-    parentName || "",
+    "", // the outline overwrites it with the parent name
     vscode.SymbolKind.Field,
     range,
     range
   );
+  numChildren && (symbol.children = (node.children as Node[]).map(toSymbol));
+
+  return symbol;
 }
 
-export function getSymbols(list: Node[]) {
-  const symbols: vscode.DocumentSymbol[] = [];
-  // list.forEach((root) => preorder(root, symbols));
-  return symbols;
+export function getSymbols(roots: Node[]) {
+  return roots.map(toSymbol);
 }
 
-function preorder(root: Node, symbols: vscode.DocumentSymbol[]) {
-  if (!root.children?.length) {
-    symbols.push(toSymbol(root, root));
+export interface TestNode {
+  name: string;
+  n: number;
+  children: TestNode[];
+}
+export function traverse(node: TestNode, out: string[]) {
+  out ||= [];
+
+  let child;
+  while (node.children.length) {
+    child = node.children.shift();
+    return traverse(child as TestNode, out);
   }
+  out.push(node.name);
 
-  root.left && preorder(root.left, symbols);
-  root.right && preorder(root.right, symbols);
+  return out;
 }
 
 // This method is called when your extension is deactivated
