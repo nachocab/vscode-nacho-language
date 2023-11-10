@@ -108,18 +108,18 @@ function toSymbol(
 
 export function getSymbols(list: Node[]) {
   const symbols: vscode.DocumentSymbol[] = [];
-  list.forEach((root) => preorder(root, symbols));
+  // list.forEach((root) => preorder(root, symbols));
   return symbols;
 }
 
-function preorder(root: Node, symbols: vscode.DocumentSymbol[]) {
-  if (!root.children?.length) {
-    symbols.push(toSymbol(root, root));
-  }
+// function preorder(root: Node, symbols: vscode.DocumentSymbol[]) {
+//   if (!root.children?.length) {
+//     symbols.push(toSymbol(root, root));
+//   }
 
-  root.left && preorder(root.left, symbols);
-  root.right && preorder(root.right, symbols);
-}
+//   root.left && preorder(root.left, symbols);
+//   root.right && preorder(root.right, symbols);
+// }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+// // This method is called when your extension is deactivated
+// export function deactivate() {}
