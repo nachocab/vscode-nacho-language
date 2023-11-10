@@ -38,9 +38,9 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "compile:watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
+    "pretest2": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "npx vscode-test --watch out/**/*.js"
+    "test": "npx vscode-test --watch 'out/**/*.js' --watch-files 'out/**/*.js'"
   },
   "repository": "git@github.com:nachocab/vscode-nacho-language.git",
   "devDependencies": {
