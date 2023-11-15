@@ -10,16 +10,63 @@ export interface Node {
   children: Node[];
 }
 
+function getTestSymbols(document: vscode.TextDocument) {
+  const symbolNames = [
+    "File", // 0
+    "Module", // 1
+    "Namespace", // 2
+    "Package", // 3
+    "Class", // 4
+    "Method", // 5
+    "Property", // 6
+    "Field", // 7
+    "Constructor", // 8
+    "Enum", // 9
+    "Interface", // 10
+    "Function", // 11
+    "Variable", // 12
+    "Constant", // 13
+    "String", // 14
+    "Number", // 15
+    "Boolean", // 16
+    "Array", // 17
+    "Object", // 18
+    "Key", // 19
+    "Null", // 20
+    "EnumMember", // 21
+    "Struct", // 22
+    "Event", // 23
+    "Operator", // 24
+    "TypeParameter", // 25
+  ];
+
+  const symbols: vscode.SymbolInformation[] = [];
+  for (let i = 0; i < symbolNames.length; i++) {
+    symbols.push(
+      new vscode.SymbolInformation(
+        `${i} ${symbolNames[i]}`,
+        i,
+        "",
+        new vscode.Location(document.uri, new vscode.Position(i, 0))
+      )
+    );
+  }
+
+  return symbols;
+}
+
 export class NachoDocumentSymbolProvider
   implements vscode.DocumentSymbolProvider
 {
   public provideDocumentSymbols(
     document: vscode.TextDocument,
     token: vscode.CancellationToken
-  ): Promise<vscode.DocumentSymbol[]> {
+  ): Promise<vscode.DocumentSymbol[] | vscode.SymbolInformation[]> {
     const nodes = getNodes(document);
     const roots = getRoots(nodes);
+
     const symbols = roots.map(getSymbol);
+    // const symbols = getTestSymbols(document); // enable for testint
 
     return new Promise((resolve, reject) => resolve(symbols));
   }
@@ -82,10 +129,34 @@ function assignParents(nodes: Node[]) {
 
 export function getSymbol(node: Node) {
   const range = getRange(node);
+
+  // https://user-images.githubusercontent.com/6726799/47913433-f7938880-de93-11e8-83d2-71e754940d42.png
+  let symbolKind;
+  switch (node.level) {
+    case 2:
+      symbolKind = vscode.SymbolKind.Event;
+      break;
+    case 3:
+      symbolKind = vscode.SymbolKind.Field;
+      break;
+    case 4:
+      symbolKind = vscode.SymbolKind.Constructor;
+      break;
+    case 5:
+      symbolKind = vscode.SymbolKind.Constant;
+      break;
+    case 6:
+      symbolKind = vscode.SymbolKind.TypeParameter;
+      break;
+    default:
+      symbolKind = vscode.SymbolKind.Key;
+      break;
+  }
+
   const symbol = new vscode.DocumentSymbol(
     node.name,
     "", // VSCode overwrites it with the parent name
-    vscode.SymbolKind.Field,
+    symbolKind,
     range,
     range
   );
