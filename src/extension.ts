@@ -10,51 +10,6 @@ export interface Node {
   children: Node[];
 }
 
-function getTestSymbols(document: vscode.TextDocument) {
-  const symbolNames = [
-    "File", // 0
-    "Module", // 1
-    "Namespace", // 2
-    "Package", // 3
-    "Class", // 4
-    "Method", // 5
-    "Property", // 6
-    "Field", // 7
-    "Constructor", // 8
-    "Enum", // 9
-    "Interface", // 10
-    "Function", // 11
-    "Variable", // 12
-    "Constant", // 13
-    "String", // 14
-    "Number", // 15
-    "Boolean", // 16
-    "Array", // 17
-    "Object", // 18
-    "Key", // 19
-    "Null", // 20
-    "EnumMember", // 21
-    "Struct", // 22
-    "Event", // 23
-    "Operator", // 24
-    "TypeParameter", // 25
-  ];
-
-  const symbols: vscode.SymbolInformation[] = [];
-  for (let i = 0; i < symbolNames.length; i++) {
-    symbols.push(
-      new vscode.SymbolInformation(
-        `${i} ${symbolNames[i]}`,
-        i,
-        "",
-        new vscode.Location(document.uri, new vscode.Position(i, 0))
-      )
-    );
-  }
-
-  return symbols;
-}
-
 export class NachoDocumentSymbolProvider
   implements vscode.DocumentSymbolProvider
 {
@@ -154,8 +109,8 @@ export function getSymbol(node: Node) {
   }
 
   const symbol = new vscode.DocumentSymbol(
-    node.name,
-    "", // VSCode overwrites it with the parent name
+    node.name, // leading spaces are trimmed in the 'Symbol in Editor' panel
+    "", // This only appears in the Outline view (not the 'Symbol in Editor' panel)
     symbolKind,
     range,
     range
@@ -191,6 +146,51 @@ export function activate(context: vscode.ExtensionContext) {
       new NachoDocumentSymbolProvider()
     )
   );
+}
+
+function getTestSymbols(document: vscode.TextDocument) {
+  const symbolNames = [
+    "File", // 0
+    "Module", // 1
+    "Namespace", // 2
+    "Package", // 3
+    "Class", // 4
+    "Method", // 5
+    "Property", // 6
+    "Field", // 7
+    "Constructor", // 8
+    "Enum", // 9
+    "Interface", // 10
+    "Function", // 11
+    "Variable", // 12
+    "Constant", // 13
+    "String", // 14
+    "Number", // 15
+    "Boolean", // 16
+    "Array", // 17
+    "Object", // 18
+    "Key", // 19
+    "Null", // 20
+    "EnumMember", // 21
+    "Struct", // 22
+    "Event", // 23
+    "Operator", // 24
+    "TypeParameter", // 25
+  ];
+
+  const symbols: vscode.SymbolInformation[] = [];
+  for (let i = 0; i < symbolNames.length; i++) {
+    symbols.push(
+      new vscode.SymbolInformation(
+        `${i} ${symbolNames[i]}`,
+        i,
+        "",
+        new vscode.Location(document.uri, new vscode.Position(i, 0))
+      )
+    );
+  }
+
+  return symbols;
 }
 
 export function deactivate() {}
