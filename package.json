@@ -35,6 +35,7 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "scripts": {
+    "syntax": "npx js-yaml syntaxes/nacho.tmLanguage.yaml > syntaxes/nacho.tmLanguage.json",
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "compile:watch": "tsc -watch -p ./",

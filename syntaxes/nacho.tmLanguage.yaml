@@ -1,0 +1,117 @@
+scopeName: source.nacho
+fileTypes:
+  - nacho
+foldingStartMarker: "(\\(\\s*$|\\{\\s*$)"
+foldingStopMarker: "(^\\s*\\)|^\\s*\\})"
+keyEquivalent: "^~nacho"
+name: nacho
+patterns:
+  - begin: "<!--" # html comments
+    captures:
+      "0":
+        name: punctuation.definition.comment.html
+    end: "--\\s*>"
+    name: comment.block.html
+
+  # headings
+  - match: "^ *#{2} .*$\\n?" # h2
+    name: entity.name.function.nacho
+  - match: "^ *#{3} .*$\\n?" # h3, etc.
+    name: entity.name.tag.nacho
+  - match: "^ *#{4} .*$\\n?"
+    name: constant.nacho
+  - match: "^ *#{5} .*$\\n?"
+    name: string.quoted.nacho
+  - match: "^ *#{6,} .*$\\n?"
+    name: storage.class.nacho
+
+  # blockquotes
+  - match: "^\\s*\\>(.*)$"
+    name: storage.class.nacho
+
+  # comments: # , // , -- ,
+  - begin: "(#|//|--) .*"
+    name: comment.line.number-sign.nacho
+    captures:
+      "0":
+        patterns:
+          - name: punctuation.nacho
+            # highlight the stuff inside a pair of * : ` "
+            match: \*(?! )([^*]+)\*|\:(?! )([^:]+)\:|\`(?! )([^`]+)\`|\"(?! )([^"]+)\"
+            captures:
+              "1":
+                name: constant.nacho
+              "2":
+                name: constant.nacho
+              "3":
+                name: constant.nacho
+              "4":
+                name: constant.nacho
+    end: "$\\n?" # end the comment on newlines
+
+  # highlight the stuff inside a pair of * @
+  - name: punctuation.nacho
+    match: "\\*(?! )([^*]+)\\*|\\@(?! )([^@]+)\\@"
+    captures:
+      "1":
+        name: variable.nacho
+      "2":
+        name: variable.nacho
+
+  # numbers
+  - match: "\\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)(L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b"
+    name: constant.numeric.nacho
+
+  # operators
+  - match: "(\\-|\\+|\\*|\\/|%\\/%|%%|%\\*%|%in%|%o%|%x%|\\^)"
+    name: keyword.operator.arithmetic.nacho
+  - match: "(=|<-|<<-|->|->>)"
+    name: keyword.operator.assignment.nacho
+  - match: "(==|!=|<>|<|>|<=|>=)"
+    name: keyword.operator.comparison.nacho
+  - match: "(!|&{1,2}|[|]{1,2})"
+    name: keyword.operator.logical.nacho
+
+  # plain double string (we can't do plain single string because it gets confused with apostrophe)
+  - begin: '"'
+    beginCaptures:
+      "0":
+        name: punctuation.definition.string.begin.nacho
+    end: '"'
+    endCaptures:
+      "0":
+        name: punctuation.definition.string.end.nacho
+    name: string.quoted.double.nacho
+    patterns:
+      - match: "\\\\."
+        name: constant.character.escape.nacho
+
+  # fancy double string
+  - begin: "“"
+    beginCaptures:
+      "0":
+        name: punctuation.definition.string.begin.nacho
+    end: "”"
+    endCaptures:
+      "0":
+        name: punctuation.definition.string.end.nacho
+    name: string.quoted.double.nacho
+    patterns:
+      - match: "\\\\."
+        name: constant.character.escape.nacho
+
+  # Spanish string
+  - begin: "«"
+    beginCaptures:
+      "0":
+        name: punctuation.definition.string.begin.nacho
+    end: "»"
+    endCaptures:
+      "0":
+        name: punctuation.definition.string.end.nacho
+    name: string.quoted.double.nacho
+    patterns:
+      - match: "\\\\."
+        name: constant.character.escape.nacho
+  - match: "\\b([a-zA-Z._][a-zA-Z0-9._]*)\\b"
+    name: text.nacho

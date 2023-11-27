@@ -1,6 +1,8 @@
 {
   "scopeName": "source.nacho",
-  "fileTypes": ["nacho"],
+  "fileTypes": [
+    "nacho"
+  ],
   "foldingStartMarker": "(\\(\\s*$|\\{\\s*$)",
   "foldingStopMarker": "(^\\s*\\)|^\\s*\\})",
   "keyEquivalent": "^~nacho",
@@ -41,7 +43,7 @@
       "name": "storage.class.nacho"
     },
     {
-      "begin": "(#) .*",
+      "begin": "(#|//|--) .*",
       "name": "comment.line.number-sign.nacho",
       "captures": {
         "0": {
@@ -60,32 +62,6 @@
                   "name": "constant.nacho"
                 },
                 "4": {
-                  "name": "constant.nacho"
-                }
-              }
-            }
-          ]
-        }
-      },
-      "end": "$\\n?"
-    },
-    {
-      "begin": "(//) .*",
-      "name": "comment.line.number-sign.nacho",
-      "captures": {
-        "0": {
-          "patterns": [
-            {
-              "name": "punctuation.nacho",
-              "match": "\\*(?! )([^*]+)\\*|\\:(?! )([^:]+)\\:|\\`(?! )([^`]+)\\`",
-              "captures": {
-                "1": {
-                  "name": "constant.nacho"
-                },
-                "2": {
-                  "name": "constant.nacho"
-                },
-                "3": {
                   "name": "constant.nacho"
                 }
               }
