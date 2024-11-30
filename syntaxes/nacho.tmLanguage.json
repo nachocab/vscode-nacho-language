@@ -79,7 +79,7 @@
     },
     {
       "name": "punctuation.nacho",
-      "match": "\\*(?! )([^*]+)\\*|\\@(?! )([^@]+)\\@",
+      "match": "\\*(?! )([^*]+)\\*|`(?! )([^`]+)`",
       "captures": {
         "1": {
           "name": "variable.nacho"

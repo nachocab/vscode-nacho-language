@@ -53,9 +53,9 @@ patterns:
                 name: constant.nacho
     end: "$\\n?" # end the comment on newlines
 
-  # highlight the stuff inside a pair of * @
+  # highlight the stuff inside a pair of * or `
   - name: punctuation.nacho
-    match: "\\*(?! )([^*]+)\\*|\\@(?! )([^@]+)\\@"
+    match: \*(?! )([^*]+)\*|`(?! )([^`]+)` # not sure why it doesn't work with another |
     captures:
       "1":
         name: variable.nacho
