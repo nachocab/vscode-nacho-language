@@ -38,11 +38,11 @@
     },
     {
       "match": "^ *#{7} .*$\\n?",
-      "name": "support.constant.nacho"
+      "name": "meta.attribute.rust.nacho"
     },
     {
       "match": "^ *#{8,} .*$\\n?",
-      "name": "meta.attribute.rust.nacho"
+      "name": "support.constant.nacho"
     },
     {
       "match": "^\\s*\\>(.*)$",

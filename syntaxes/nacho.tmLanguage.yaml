@@ -13,21 +13,21 @@ patterns:
     end: "--\\s*>"
     name: comment.block.html
 
-  # headings (h2-h8)
+  # headings (h2-h8) - change them via nacho-language-palette.sketch
   - match: "^ *#{2} .*$\\n?"
-    name: entity.name.function.nacho # #61AFEF
+    name: entity.name.function.nacho # #62AFEF
   - match: "^ *#{3} .*$\\n?"
-    name: entity.name.tag.nacho # #E06C75
+    name: entity.name.tag.nacho # #D86C74
   - match: "^ *#{4} .*$\\n?"
-    name: constant.nacho # #D19A66
+    name: constant.nacho # #D29A66
   - match: "^ *#{5} .*$\\n?"
-    name: string.nacho # #98C379
+    name: string.nacho # #A0C684
   - match: "^ *#{6} .*$\\n?"
-    name: storage.nacho # #C678DD
+    name: storage.nacho # #CE86E4
   - match: "^ *#{7} .*$\\n?"
-    name: support.constant.nacho # #4F48DA
+    name: meta.attribute.rust.nacho # #D7B87D
   - match: "^ *#{8,} .*$\\n?"
-    name: meta.attribute.rust.nacho # #BCC199
+    name: support.constant.nacho # #B864EB
 
   # blockquotes
   - match: "^\\s*\\>(.*)$"
