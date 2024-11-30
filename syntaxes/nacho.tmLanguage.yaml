@@ -13,17 +13,21 @@ patterns:
     end: "--\\s*>"
     name: comment.block.html
 
-  # headings
-  - match: "^ *#{2} .*$\\n?" # h2
-    name: entity.name.function.nacho
-  - match: "^ *#{3} .*$\\n?" # h3, etc.
-    name: entity.name.tag.nacho
+  # headings (h2-h8)
+  - match: "^ *#{2} .*$\\n?"
+    name: entity.name.function.nacho # #61AFEF
+  - match: "^ *#{3} .*$\\n?"
+    name: entity.name.tag.nacho # #E06C75
   - match: "^ *#{4} .*$\\n?"
-    name: constant.nacho
+    name: constant.nacho # #D19A66
   - match: "^ *#{5} .*$\\n?"
-    name: string.quoted.nacho
-  - match: "^ *#{6,} .*$\\n?"
-    name: storage.class.nacho
+    name: string.nacho # #98C379
+  - match: "^ *#{6} .*$\\n?"
+    name: storage.nacho # #C678DD
+  - match: "^ *#{7} .*$\\n?"
+    name: support.constant.nacho # #4F48DA
+  - match: "^ *#{8,} .*$\\n?"
+    name: meta.attribute.rust.nacho # #BCC199
 
   # blockquotes
   - match: "^\\s*\\>(.*)$"

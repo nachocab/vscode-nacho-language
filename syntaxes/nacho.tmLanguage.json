@@ -1,8 +1,6 @@
 {
   "scopeName": "source.nacho",
-  "fileTypes": [
-    "nacho"
-  ],
+  "fileTypes": ["nacho"],
   "foldingStartMarker": "(\\(\\s*$|\\{\\s*$)",
   "foldingStopMarker": "(^\\s*\\)|^\\s*\\})",
   "keyEquivalent": "^~nacho",
@@ -32,11 +30,19 @@
     },
     {
       "match": "^ *#{5} .*$\\n?",
-      "name": "string.quoted.nacho"
+      "name": "string.nacho"
     },
     {
-      "match": "^ *#{6,} .*$\\n?",
-      "name": "storage.class.nacho"
+      "match": "^ *#{6} .*$\\n?",
+      "name": "storage.nacho"
+    },
+    {
+      "match": "^ *#{7} .*$\\n?",
+      "name": "support.constant.nacho"
+    },
+    {
+      "match": "^ *#{8,} .*$\\n?",
+      "name": "meta.attribute.rust.nacho"
     },
     {
       "match": "^\\s*\\>(.*)$",
