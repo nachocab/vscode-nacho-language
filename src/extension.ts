@@ -90,8 +90,7 @@ export function getSymbol(node: Node) {
   let symbolKind;
   switch (node.level) {
     case 2:
-      // symbolKind = vscode.SymbolKind.Event; // 23
-      symbolKind = vscode.SymbolKind.Struct; // 23
+      symbolKind = vscode.SymbolKind.Event; // 23
       break;
     case 3:
       symbolKind = vscode.SymbolKind.Field; // 7
