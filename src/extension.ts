@@ -21,7 +21,7 @@ export class NachoDocumentSymbolProvider
     const roots = getRoots(nodes);
 
     const symbols = roots.map(getSymbol);
-    // const symbols = getTestSymbols(document); // enable for testint
+    // const symbols = getTestSymbols(document); // enable for testing
 
     return new Promise((resolve, reject) => resolve(symbols));
   }
@@ -86,27 +86,37 @@ export function getSymbol(node: Node) {
   const range = getRange(node);
 
   // https://user-images.githubusercontent.com/6726799/47913433-f7938880-de93-11e8-83d2-71e754940d42.png
+  // opt + click on SymbolKind to see the numeric values
   let symbolKind;
   switch (node.level) {
     case 2:
-      symbolKind = vscode.SymbolKind.Event;
+      // symbolKind = vscode.SymbolKind.Event; // 23
+      symbolKind = vscode.SymbolKind.Struct; // 23
       break;
     case 3:
-      symbolKind = vscode.SymbolKind.Field;
+      symbolKind = vscode.SymbolKind.Field; // 7
       break;
     case 4:
-      symbolKind = vscode.SymbolKind.Constructor;
+      symbolKind = vscode.SymbolKind.Constructor; // 8
       break;
     case 5:
-      symbolKind = vscode.SymbolKind.Constant;
+      symbolKind = vscode.SymbolKind.Constant; // 13
       break;
     case 6:
-      symbolKind = vscode.SymbolKind.TypeParameter;
+      symbolKind = vscode.SymbolKind.TypeParameter; // 25
+      break;
+    case 7:
+      symbolKind = vscode.SymbolKind.Class; // 4
+      break;
+    case 8:
+      symbolKind = vscode.SymbolKind.Struct; // 22
       break;
     default:
-      symbolKind = vscode.SymbolKind.Key;
+      symbolKind = vscode.SymbolKind.Key; // 19
       break;
   }
+
+  // to ensure all levels are shown, update vscode://settings/editor.stickyScroll.maxLineCount
 
   const symbol = new vscode.DocumentSymbol(
     node.name, // leading spaces are trimmed in the 'Symbol in Editor' panel
