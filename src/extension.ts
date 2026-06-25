@@ -21,9 +21,27 @@ export class NachoDocumentSymbolProvider
     const roots = getRoots(nodes);
 
     const symbols = roots.map(getSymbol);
-    // const symbols = getTestSymbols(document); // enable for testing
 
     return new Promise((resolve, reject) => resolve(symbols));
+  }
+}
+
+export class NachoFoldingRangeProvider implements vscode.FoldingRangeProvider {
+  public provideFoldingRanges(
+    document: vscode.TextDocument,
+    context: vscode.FoldingContext,
+    token: vscode.CancellationToken
+  ): vscode.FoldingRange[] {
+    const nodes = getNodes(document);
+    getRoots(nodes); // populates each node's children
+    return nodes
+      .map((node) => {
+        const endLine = node.children.length
+          ? deepestChild(node).endLine
+          : node.endLine;
+        return new vscode.FoldingRange(node.startLine, endLine);
+      })
+      .filter((range) => range.end > range.start);
   }
 }
 
@@ -153,53 +171,12 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.languages.registerDocumentSymbolProvider(
       { language: "nacho", scheme: "file" },
       new NachoDocumentSymbolProvider()
+    ),
+    vscode.languages.registerFoldingRangeProvider(
+      { language: "nacho", scheme: "file" },
+      new NachoFoldingRangeProvider()
     )
   );
-}
-
-function getTestSymbols(document: vscode.TextDocument) {
-  const symbolNames = [
-    "File", // 0
-    "Module", // 1
-    "Namespace", // 2
-    "Package", // 3
-    "Class", // 4
-    "Method", // 5
-    "Property", // 6
-    "Field", // 7
-    "Constructor", // 8
-    "Enum", // 9
-    "Interface", // 10
-    "Function", // 11
-    "Variable", // 12
-    "Constant", // 13
-    "String", // 14
-    "Number", // 15
-    "Boolean", // 16
-    "Array", // 17
-    "Object", // 18
-    "Key", // 19
-    "Null", // 20
-    "EnumMember", // 21
-    "Struct", // 22
-    "Event", // 23
-    "Operator", // 24
-    "TypeParameter", // 25
-  ];
-
-  const symbols: vscode.SymbolInformation[] = [];
-  for (let i = 0; i < symbolNames.length; i++) {
-    symbols.push(
-      new vscode.SymbolInformation(
-        `${i} ${symbolNames[i]}`,
-        i,
-        "",
-        new vscode.Location(document.uri, new vscode.Position(i, 0))
-      )
-    );
-  }
-
-  return symbols;
 }
 
 export function deactivate() {}

@@ -1,6 +1,8 @@
 {
   "scopeName": "source.nacho",
-  "fileTypes": ["nacho"],
+  "fileTypes": [
+    "nacho"
+  ],
   "foldingStartMarker": "(\\(\\s*$|\\{\\s*$)",
   "foldingStopMarker": "(^\\s*\\)|^\\s*\\})",
   "keyEquivalent": "^~nacho",
@@ -56,7 +58,7 @@
           "patterns": [
             {
               "name": "punctuation.nacho",
-              "match": "\\*(?! )([^*]+)\\*|\\:(?! )([^:]+)\\:|\\`(?! )([^`]+)\\`|\\\"(?! )([^\"]+)\\\"",
+              "match": "\\*(?! )([^*]+)\\*|\\`(?! )([^`]+)\\`|\\\"(?! )([^\"]+)\\\"",
               "captures": {
                 "1": {
                   "name": "constant.nacho"
@@ -65,9 +67,6 @@
                   "name": "constant.nacho"
                 },
                 "3": {
-                  "name": "constant.nacho"
-                },
-                "4": {
                   "name": "constant.nacho"
                 }
               }
@@ -110,71 +109,81 @@
       "name": "keyword.operator.logical.nacho"
     },
     {
-      "begin": "\"",
-      "beginCaptures": {
-        "0": {
-          "name": "punctuation.definition.string.begin.nacho"
-        }
-      },
-      "end": "\"",
-      "endCaptures": {
-        "0": {
-          "name": "punctuation.definition.string.end.nacho"
-        }
-      },
-      "name": "string.quoted.double.nacho",
-      "patterns": [
-        {
-          "match": "\\\\.",
-          "name": "constant.character.escape.nacho"
-        }
-      ]
-    },
-    {
-      "begin": "“",
-      "beginCaptures": {
-        "0": {
-          "name": "punctuation.definition.string.begin.nacho"
-        }
-      },
-      "end": "”",
-      "endCaptures": {
-        "0": {
-          "name": "punctuation.definition.string.end.nacho"
-        }
-      },
-      "name": "string.quoted.double.nacho",
-      "patterns": [
-        {
-          "match": "\\\\.",
-          "name": "constant.character.escape.nacho"
-        }
-      ]
-    },
-    {
-      "begin": "«",
-      "beginCaptures": {
-        "0": {
-          "name": "punctuation.definition.string.begin.nacho"
-        }
-      },
-      "end": "»",
-      "endCaptures": {
-        "0": {
-          "name": "punctuation.definition.string.end.nacho"
-        }
-      },
-      "name": "string.quoted.double.nacho",
-      "patterns": [
-        {
-          "match": "\\\\.",
-          "name": "constant.character.escape.nacho"
-        }
-      ]
+      "include": "#string"
     },
     {
       "match": "\\b([a-zA-Z._][a-zA-Z0-9._]*)\\b",
       "name": "text.nacho"
     }
-  ]
+  ],
+  "repository": {
+    "string": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "end": "\"",
+          "name": "string.quoted.double.nacho",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.nacho"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.nacho"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#string-escape"
+            }
+          ]
+        },
+        {
+          "begin": "“",
+          "end": "”",
+          "name": "string.quoted.double.nacho",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.nacho"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.nacho"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#string-escape"
+            }
+          ]
+        },
+        {
+          "begin": "«",
+          "end": "»",
+          "name": "string.quoted.double.nacho",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.nacho"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.nacho"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#string-escape"
+            }
+          ]
+        }
+      ]
+    },
+    "string-escape": {
+      "match": "\\\\.",
+      "name": "constant.character.escape.nacho"
+    }
+  }
 }

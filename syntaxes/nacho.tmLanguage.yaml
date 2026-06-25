@@ -40,16 +40,14 @@ patterns:
       "0":
         patterns:
           - name: punctuation.nacho
-            # highlight the stuff inside a pair of * : ` "
-            match: \*(?! )([^*]+)\*|\:(?! )([^:]+)\:|\`(?! )([^`]+)\`|\"(?! )([^"]+)\"
+            # highlight the stuff inside a pair of * ` "
+            match: \*(?! )([^*]+)\*|\`(?! )([^`]+)\`|\"(?! )([^"]+)\"
             captures:
               "1":
                 name: constant.nacho
               "2":
                 name: constant.nacho
               "3":
-                name: constant.nacho
-              "4":
                 name: constant.nacho
     end: "$\\n?" # end the comment on newlines
 
@@ -76,46 +74,48 @@ patterns:
   - match: "(!|&{1,2}|[|]{1,2})"
     name: keyword.operator.logical.nacho
 
-  # plain double string (we can't do plain single string because it gets confused with apostrophe)
-  - begin: '"'
-    beginCaptures:
-      "0":
-        name: punctuation.definition.string.begin.nacho
-    end: '"'
-    endCaptures:
-      "0":
-        name: punctuation.definition.string.end.nacho
-    name: string.quoted.double.nacho
-    patterns:
-      - match: "\\\\."
-        name: constant.character.escape.nacho
-
-  # fancy double string
-  - begin: "“"
-    beginCaptures:
-      "0":
-        name: punctuation.definition.string.begin.nacho
-    end: "”"
-    endCaptures:
-      "0":
-        name: punctuation.definition.string.end.nacho
-    name: string.quoted.double.nacho
-    patterns:
-      - match: "\\\\."
-        name: constant.character.escape.nacho
-
-  # Spanish string
-  - begin: "«"
-    beginCaptures:
-      "0":
-        name: punctuation.definition.string.begin.nacho
-    end: "»"
-    endCaptures:
-      "0":
-        name: punctuation.definition.string.end.nacho
-    name: string.quoted.double.nacho
-    patterns:
-      - match: "\\\\."
-        name: constant.character.escape.nacho
+  # strings: plain double, fancy double, Spanish guillemets
+  # (we can't do plain single string because it gets confused with apostrophe)
+  - include: "#string"
   - match: "\\b([a-zA-Z._][a-zA-Z0-9._]*)\\b"
     name: text.nacho
+
+repository:
+  string:
+    patterns:
+      - begin: '"'
+        end: '"'
+        name: string.quoted.double.nacho
+        beginCaptures:
+          "0":
+            name: punctuation.definition.string.begin.nacho
+        endCaptures:
+          "0":
+            name: punctuation.definition.string.end.nacho
+        patterns:
+          - include: "#string-escape"
+      - begin: "“"
+        end: "”"
+        name: string.quoted.double.nacho
+        beginCaptures:
+          "0":
+            name: punctuation.definition.string.begin.nacho
+        endCaptures:
+          "0":
+            name: punctuation.definition.string.end.nacho
+        patterns:
+          - include: "#string-escape"
+      - begin: "«"
+        end: "»"
+        name: string.quoted.double.nacho
+        beginCaptures:
+          "0":
+            name: punctuation.definition.string.begin.nacho
+        endCaptures:
+          "0":
+            name: punctuation.definition.string.end.nacho
+        patterns:
+          - include: "#string-escape"
+  string-escape:
+    match: "\\\\."
+    name: constant.character.escape.nacho
