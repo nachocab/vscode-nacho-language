@@ -4,6 +4,12 @@ All notable changes to the Nacho extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.18.1]
+
+### Added
+
+- Extension icon.
+
 ## [0.18.0]
 
 ### Added
