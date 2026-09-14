@@ -147,13 +147,16 @@ describe("Nacho Document Symbols", () => {
     const nodes = ["h2-1", "h3-1", "h4-1"].map(getAuxNode);
     const roots = getRoots(nodes);
 
+    // Each heading level carries its own SymbolKind, which gives every depth a
+    // distinct icon in the Outline view.
     const expected: vscode.DocumentSymbol = getAuxSymbol(
       "h2-1",
+      vscode.SymbolKind.Event,
       [0, 2, 4],
       // prettier-ignore
       [
-        getAuxSymbol("h3-1", [1, 2, 4], [
-          getAuxSymbol("h4-1", [2, 2, 4], [])
+        getAuxSymbol("h3-1", vscode.SymbolKind.Field, [1, 2, 4], [
+          getAuxSymbol("h4-1", vscode.SymbolKind.Constructor, [2, 2, 4], [])
         ])
       ]
     );
@@ -229,6 +232,7 @@ function getAuxNode(name: string, line: number) {
 type PseudoRange = [number, number, number];
 function getAuxSymbol(
   name: string,
+  kind: vscode.SymbolKind,
   pseudoRange: PseudoRange,
   children: vscode.DocumentSymbol[]
 ) {
@@ -239,13 +243,7 @@ function getAuxSymbol(
     pseudoRange[2]
   );
 
-  const symbol = new vscode.DocumentSymbol(
-    name,
-    "",
-    vscode.SymbolKind.Field,
-    range,
-    range
-  );
+  const symbol = new vscode.DocumentSymbol(name, "", kind, range, range);
   symbol.children = children;
 
   return symbol;

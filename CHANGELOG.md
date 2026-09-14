@@ -4,6 +4,19 @@ All notable changes to the Nacho extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [Unreleased]
+
+### Fixed
+
+- `@vscode/test-electron` 3.1.0 resolves the VS Code executable from `Info.plist`, so the suite launches against builds whose macOS binary is named `Code`.
+- The `getSymbols simple` expectation asserts the per-level `SymbolKind` that `getSymbol` returns.
+
+### Changed
+
+- Test tooling requires Node 22 or newer, pinned in `.nvmrc`. TypeScript 5.9.3 and `@types/node` 22 come with it, since the modern `@types/node` declarations (generic `Buffer`) are only served to TypeScript 5.7+.
+- Lockfile bumps `brace-expansion` to 1.1.18, 2.1.4 and 5.0.9, clearing three high-severity DoS advisories.
+- Test-tooling versions are exact rather than caret ranges.
+
 ## [0.19.0]
 
 ### Added

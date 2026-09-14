@@ -56,3 +56,10 @@ The TextMate grammar is authored in `syntaxes/nacho.tmLanguage.yaml`. After edit
 ```
 npm run syntax
 ```
+
+Tests run inside a VS Code build that the harness downloads into `.vscode-test/`. That tooling requires Node 22 or newer, which `.nvmrc` pins:
+
+```
+npx vscode-test        # single run
+npm test               # same, watching out/**/*.js
+```
