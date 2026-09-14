@@ -42,6 +42,7 @@ Lines starting with `//` or `--` are also treated as comments.
 
 - `cmd`/`ctrl` + `R`—jump to any heading via the symbol quick panel.
 - The **Outline** view shows the full heading hierarchy.
+- **Folding** works on any line with an indented block under it, not just headings. A heading folds down to its deepest subheading; every other line folds down to the last line indented under it. Blank lines belong to the block that surrounds them, and a fold never ends on one.
 - To keep all heading levels visible in sticky scroll, raise `editor.stickyScroll.maxLineCount` in your settings.
 
 ## Note on file associations

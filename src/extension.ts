@@ -26,6 +26,8 @@ export class NachoDocumentSymbolProvider
   }
 }
 
+export type LineRange = [start: number, end: number];
+
 export class NachoFoldingRangeProvider implements vscode.FoldingRangeProvider {
   public provideFoldingRanges(
     document: vscode.TextDocument,
@@ -34,15 +36,66 @@ export class NachoFoldingRangeProvider implements vscode.FoldingRangeProvider {
   ): vscode.FoldingRange[] {
     const nodes = getNodes(document);
     getRoots(nodes); // populates each node's children
-    return nodes
-      .map((node) => {
-        const endLine = node.children.length
-          ? deepestChild(node).endLine
-          : node.endLine;
-        return new vscode.FoldingRange(node.startLine, endLine);
-      })
-      .filter((range) => range.end > range.start);
+    const headingRanges: LineRange[] = nodes.map((node) => {
+      const endLine = node.children.length
+        ? deepestChild(node).endLine
+        : node.endLine;
+      return [node.startLine, endLine];
+    });
+    const lines = document.getText().split(/\r?\n/);
+
+    return mergeRanges(headingRanges, getIndentRanges(lines)).map(
+      ([start, end]) => new vscode.FoldingRange(start, end)
+    );
   }
+}
+
+/**
+ * A line folds down to the last line of the block indented under it. Blank
+ * lines belong to the block that surrounds them, but a block never ends on one.
+ */
+export function getIndentRanges(lines: string[]): LineRange[] {
+  const ranges: LineRange[] = [];
+  const open: { line: number; indent: number }[] = [];
+  let lastFilledLine = -1;
+
+  // An indent no deeper than an open block ends it. Passing 0 unwinds the whole
+  // stack, since no indent is shallower than that.
+  const closeBlocksFrom = (indent: number) => {
+    while (indent <= (open.at(-1)?.indent ?? -1)) {
+      const { line } = open.pop() as { line: number; indent: number };
+      ranges.push([line, lastFilledLine]);
+    }
+  };
+
+  lines.forEach((text, line) => {
+    const indent = text.search(/\S/);
+    if (indent === -1) {
+      return; // blank
+    }
+    closeBlocksFrom(indent);
+    open.push({ line, indent });
+    lastFilledLine = line;
+  });
+  closeBlocksFrom(0);
+
+  return ranges;
+}
+
+/**
+ * One fold per starting line. Where a heading's fold and the block indented
+ * under it disagree, the one reaching further down wins, so a heading still
+ * folds away its nested headings when they sit at its own indent.
+ */
+export function mergeRanges(...rangeSets: LineRange[][]): LineRange[] {
+  const endByStart = new Map<number, number>();
+  for (const [start, end] of rangeSets.flat()) {
+    endByStart.set(start, Math.max(end, endByStart.get(start) ?? start));
+  }
+
+  return [...endByStart]
+    .filter(([start, end]) => end > start)
+    .sort(([start], [otherStart]) => start - otherStart);
 }
 
 export const ROOT = -1;

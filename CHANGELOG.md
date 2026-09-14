@@ -4,6 +4,16 @@ All notable changes to the Nacho extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.19.0]
+
+### Added
+
+- Folding ranges for indented blocks, so any line with deeper-indented lines under it folds, alongside the heading folds.
+
+### Changed
+
+- Lockfile bumps `js-yaml` to 4.3.2 (Dependabot #14, #16).
+
 ## [0.18.1]
 
 ### Added

@@ -1,5 +1,13 @@
 import * as assert from "assert";
-import { getSymbol, getRoots, Node, ROOT } from "../../extension";
+import {
+  getSymbol,
+  getRoots,
+  getIndentRanges,
+  mergeRanges,
+  LineRange,
+  Node,
+  ROOT,
+} from "../../extension";
 import { it } from "mocha";
 
 import * as vscode from "vscode";
@@ -154,6 +162,56 @@ describe("Nacho Document Symbols", () => {
     assert.deepEqual(symbol, expected);
   });
 });
+
+describe("Nacho Folding Ranges", () => {
+  it("getIndentRanges nests blocks and skips trailing blank lines", () => {
+    // prettier-ignore
+    const lines = [
+      "## h2-a",     // 0
+      "  text",      // 1
+      "    deeper",  // 2
+      "",            // 3
+      "  text again",// 4
+      "",            // 5
+      "## h2-b",     // 6
+      "  text",      // 7
+    ];
+
+    const ranges = getIndentRanges(lines).filter(([s, e]) => e > s);
+
+    assert.deepEqual(sortRanges(ranges), [
+      [0, 4],
+      [1, 2],
+      [6, 7],
+    ]);
+  });
+
+  it("getIndentRanges ignores lines with nothing indented under them", () => {
+    const lines = ["text", "text", "text"];
+
+    assert.deepEqual(mergeRanges(getIndentRanges(lines)), []);
+  });
+
+  it("mergeRanges keeps the range that reaches furthest down", () => {
+    const headingRanges: LineRange[] = [
+      [0, 3],
+      [4, 4],
+    ];
+    const indentRanges: LineRange[] = [
+      [0, 1],
+      [2, 5],
+    ];
+
+    assert.deepEqual(mergeRanges(headingRanges, indentRanges), [
+      [0, 3],
+      [2, 5],
+    ]);
+  });
+});
+
+function sortRanges(ranges: LineRange[]) {
+  return [...ranges].sort(([start], [otherStart]) => start - otherStart);
+}
 
 function getAuxNode(name: string, line: number) {
   return {
