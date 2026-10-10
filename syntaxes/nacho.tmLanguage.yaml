@@ -1,9 +1,4 @@
 scopeName: source.nacho
-fileTypes:
-  - nacho
-foldingStartMarker: "(\\(\\s*$|\\{\\s*$)"
-foldingStopMarker: "(^\\s*\\)|^\\s*\\})"
-keyEquivalent: "^~nacho"
 name: nacho
 patterns:
   - begin: "<!--" # html comments
@@ -33,8 +28,8 @@ patterns:
   - match: "^\\s*\\>(.*)$"
     name: storage.class.nacho
 
-  # comments: # , // , -- ,
-  - begin: "(#|//|--) .*"
+  # comments: # , // , -- , each running to the end of its line
+  - match: "(#|//|--) .*"
     name: comment.line.number-sign.nacho
     captures:
       "0":
@@ -49,7 +44,6 @@ patterns:
                 name: constant.nacho
               "3":
                 name: constant.nacho
-    end: "$\\n?" # end the comment on newlines
 
   # highlight the stuff inside a pair of * or `
   - name: punctuation.nacho
@@ -60,25 +54,25 @@ patterns:
       "2":
         name: variable.nacho
 
-  # numbers
-  - match: "\\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)(L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b"
+  # numbers, unless joined to a word by a dot (the `5` and `.5` in `x.5`)
+  - match: "(?<![\\w.])((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)(L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b"
     name: constant.numeric.nacho
 
-  # operators
-  - match: "(\\-|\\+|\\*|\\/|%\\/%|%%|%\\*%|%in%|%o%|%x%|\\^)"
-    name: keyword.operator.arithmetic.nacho
-  - match: "(=|<-|<<-|->|->>)"
+  # operators. At a given position the first rule that matches wins, and
+  # within a rule the first alternative, so each operator is listed ahead of
+  # any shorter one it starts with (`->` before `-`, `==` before `=`).
+  - match: "<<-|<-|->>|->|=(?!=)"
     name: keyword.operator.assignment.nacho
-  - match: "(==|!=|<>|<|>|<=|>=)"
+  - match: "==|!=|<>|<=|>=|<|>"
     name: keyword.operator.comparison.nacho
-  - match: "(!|&{1,2}|[|]{1,2})"
+  - match: "%/%|%%|%\\*%|%in%|%o%|%x%|-|\\+|\\*|/|\\^"
+    name: keyword.operator.arithmetic.nacho
+  - match: "&&|&|\\|\\||\\||!"
     name: keyword.operator.logical.nacho
 
   # strings: plain double, fancy double, Spanish guillemets
   # (we can't do plain single string because it gets confused with apostrophe)
   - include: "#string"
-  - match: "\\b([a-zA-Z._][a-zA-Z0-9._]*)\\b"
-    name: text.nacho
 
 repository:
   string:

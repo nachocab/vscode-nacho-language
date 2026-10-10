@@ -1,11 +1,5 @@
 {
   "scopeName": "source.nacho",
-  "fileTypes": [
-    "nacho"
-  ],
-  "foldingStartMarker": "(\\(\\s*$|\\{\\s*$)",
-  "foldingStopMarker": "(^\\s*\\)|^\\s*\\})",
-  "keyEquivalent": "^~nacho",
   "name": "nacho",
   "patterns": [
     {
@@ -51,7 +45,7 @@
       "name": "storage.class.nacho"
     },
     {
-      "begin": "(#|//|--) .*",
+      "match": "(#|//|--) .*",
       "name": "comment.line.number-sign.nacho",
       "captures": {
         "0": {
@@ -73,8 +67,7 @@
             }
           ]
         }
-      },
-      "end": "$\\n?"
+      }
     },
     {
       "name": "punctuation.nacho",
@@ -89,31 +82,27 @@
       }
     },
     {
-      "match": "\\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)(L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b",
+      "match": "(?<![\\w.])((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)(L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b",
       "name": "constant.numeric.nacho"
     },
     {
-      "match": "(\\-|\\+|\\*|\\/|%\\/%|%%|%\\*%|%in%|%o%|%x%|\\^)",
-      "name": "keyword.operator.arithmetic.nacho"
-    },
-    {
-      "match": "(=|<-|<<-|->|->>)",
+      "match": "<<-|<-|->>|->|=(?!=)",
       "name": "keyword.operator.assignment.nacho"
     },
     {
-      "match": "(==|!=|<>|<|>|<=|>=)",
+      "match": "==|!=|<>|<=|>=|<|>",
       "name": "keyword.operator.comparison.nacho"
     },
     {
-      "match": "(!|&{1,2}|[|]{1,2})",
+      "match": "%/%|%%|%\\*%|%in%|%o%|%x%|-|\\+|\\*|/|\\^",
+      "name": "keyword.operator.arithmetic.nacho"
+    },
+    {
+      "match": "&&|&|\\|\\||\\||!",
       "name": "keyword.operator.logical.nacho"
     },
     {
       "include": "#string"
-    },
-    {
-      "match": "\\b([a-zA-Z._][a-zA-Z0-9._]*)\\b",
-      "name": "text.nacho"
     }
   ],
   "repository": {
