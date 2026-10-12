@@ -4,6 +4,12 @@ All notable changes to the Nacho extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.20.1] - 2026-10-12
+
+### Changed
+
+- Updated the development-tooling lockfile to `brace-expansion` 1.1.21, 2.1.7 and 5.0.12 (Dependabot #17), fixing denial-of-service issues involving deeply nested braces, chained comma groups and repeated parser rewrites.
+
 ## [0.20.0]
 
 ### Fixed
